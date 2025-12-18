@@ -34,6 +34,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.serranoie.app.puckperfect.core.ui.theme.PuckPerfectTheme
+import com.serranoie.app.puckperfect.core.ui.theme.displaySmallExpressive
+import com.serranoie.app.puckperfect.core.ui.theme.labelMediumCondensed
+import com.serranoie.app.puckperfect.core.ui.theme.labelSmallCondensed
+import com.serranoie.app.puckperfect.core.ui.theme.titleLargeExpressive
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 enum class ShotFlavor { SWEET, BITTER, ACID }
@@ -41,7 +45,7 @@ enum class ShotFlavor { SWEET, BITTER, ACID }
 @Composable
 fun ShotItem(
     beanName: String,
-    dateTime: String, // e.g. Sep 28, 9:00 AM
+    dateTime: String,
     grinder: String,
     grinderSetting: String,
     yield: String,
@@ -51,7 +55,7 @@ fun ShotItem(
 ) {
     val surface = MaterialTheme.colorScheme.surfaceContainerHigh
     val error = MaterialTheme.colorScheme.error
-    val outline = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
+    val outline = MaterialTheme.colorScheme.outline.copy(alpha = 0.25f)
     val isWarning = (flavor == ShotFlavor.BITTER || flavor == ShotFlavor.ACID)
     val border = if (isWarning) error else outline
     val flavorLabel = when (flavor) {
@@ -60,11 +64,11 @@ fun ShotItem(
         ShotFlavor.ACID -> "SOUR"
     }
     val chipColor = when (flavor) {
-        ShotFlavor.SWEET -> MaterialTheme.colorScheme.onSurface
+        ShotFlavor.SWEET -> MaterialTheme.colorScheme.surfaceVariant
         else -> error
     }
     val chipBg = when (flavor) {
-        ShotFlavor.SWEET -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.94f)
+        ShotFlavor.SWEET -> MaterialTheme.colorScheme.primaryContainer
         else -> Color.Transparent
     }
 
@@ -73,12 +77,11 @@ fun ShotItem(
             .fillMaxWidth()
             .padding(6.dp),
         shape = RoundedCornerShape(10.dp),
-        border = if (isWarning) BorderStroke(1.6.dp, error) else null,
+        border = if (isWarning) BorderStroke(1.25.dp, error) else null,
         colors = CardDefaults.cardColors(containerColor = surface)
     ) {
         Column(Modifier.padding(vertical = 18.dp, horizontal = 18.dp)) {
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                // Flavor/Note chip
                 if (flavor == ShotFlavor.SWEET) {
                     Surface(
                         color = chipBg,
@@ -88,7 +91,7 @@ fun ShotItem(
                         Text(
                             flavorLabel,
                             color = chipColor,
-                            fontWeight = FontWeight.Bold,
+                            fontWeight = FontWeight.Black,
                             modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
                             style = MaterialTheme.typography.labelMedium
                         )
@@ -106,7 +109,7 @@ fun ShotItem(
                             Text(
                                 flavorLabel,
                                 color = error,
-                                fontWeight = FontWeight.Bold,
+                                fontWeight = FontWeight.Black,
                                 style = MaterialTheme.typography.labelMedium
                             )
                         }
@@ -115,7 +118,7 @@ fun ShotItem(
                 Spacer(Modifier.weight(1f))
                 Text(
                     dateTime,
-                    style = MaterialTheme.typography.labelMedium,
+                    style = MaterialTheme.typography.labelMediumCondensed(),
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.73f),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -124,10 +127,8 @@ fun ShotItem(
             Spacer(Modifier.height(5.dp))
             Text(
                 beanName.uppercase(),
-                fontWeight = FontWeight.ExtraBold,
-                fontSize = 28.sp,
-                style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.onSurface,
+                style = MaterialTheme.typography.displaySmallExpressive(),
+                fontWeight = FontWeight.Bold,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.padding(bottom = 2.dp)
@@ -136,7 +137,7 @@ fun ShotItem(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         imageVector = Icons.Outlined.Warning,
-                        contentDescription = "Under-extracted",
+                        contentDescription = "Under extracted",
                         tint = error,
                         modifier = Modifier.size(16.dp)
                     )
@@ -144,7 +145,7 @@ fun ShotItem(
                         "Under-extracted",
                         color = error,
                         fontWeight = FontWeight.SemiBold,
-                        style = MaterialTheme.typography.labelSmall,
+                        style = MaterialTheme.typography.labelSmallCondensed(),
                         modifier = Modifier.padding(start = 4.dp)
                     )
                 }
@@ -189,15 +190,14 @@ private fun ShotStatColumn(label: String, value: String, unit: String, modifier:
         modifier = modifier
     ) {
         Text(
-            label,
-            style = MaterialTheme.typography.labelSmall,
+            label.uppercase(),
+            style = MaterialTheme.typography.labelSmallCondensed(),
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Row(verticalAlignment = Alignment.Bottom) {
             Text(
                 value,
-                fontWeight = FontWeight.Bold,
-                fontSize = 22.sp,
+                style = MaterialTheme.typography.titleLargeExpressive(),
                 color = MaterialTheme.colorScheme.onSurface
             )
             if (unit.isNotEmpty()) {
@@ -226,7 +226,7 @@ private fun ShotPreview() {
 
             ShotItem(
                 beanName = "La Gracia Dulce",
-                dateTime = "2023-10-01 08:30",
+                dateTime = "Today",
                 grinder = "Mazzer Mini",
                 grinderSetting = "18",
                 yield = "30",
@@ -237,7 +237,7 @@ private fun ShotPreview() {
 
             ShotItem(
                 beanName = "La Gracia Dulce",
-                dateTime = "2023-10-01 08:30",
+                dateTime = "15 December",
                 grinder = "Mazzer Mini",
                 grinderSetting = "18",
                 yield = "30",

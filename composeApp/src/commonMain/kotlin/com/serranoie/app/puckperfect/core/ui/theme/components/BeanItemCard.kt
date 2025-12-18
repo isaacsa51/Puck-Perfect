@@ -53,6 +53,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.serranoie.app.puckperfect.core.ui.theme.PuckPerfectTheme
+import com.serranoie.app.puckperfect.core.ui.theme.components.backgrounds.DotMatrixBackground
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.RandomBackground
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 data class LastExtractionUi(
@@ -75,13 +77,14 @@ fun BeanItemCard(
     roast: String = "Medium Roast",
     showExtraction: Boolean,
     onToggleExtraction: () -> Unit,
-    lastExtraction: LastExtractionUi
+    lastExtraction: LastExtractionUi,
+    beanId: Int = name.hashCode() // Use name hash as seed for consistent backgrounds
 ) {
     Card(
         modifier = modifier
+            .padding(6.dp)
             .fillMaxWidth()
             .wrapContentHeight()
-            .clip(RoundedCornerShape(10.dp))
             .clickable { onClick() },
         shape = RoundedCornerShape(10.dp),
     ) {
@@ -89,15 +92,17 @@ fun BeanItemCard(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .wrapContentHeight()
                 .clip(RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp))
         ) {
-            DotMatrixBackground(
-                modifier = Modifier.height(IntrinsicSize.Min).fillMaxWidth(),
+            RandomBackground(
+                seed = beanId,
+                modifier = Modifier.matchParentSize()
             )
             Column(
                 Modifier
                     .fillMaxWidth()
-                    .padding(top = 22.dp, bottom = 16.dp, start = 22.dp, end = 22.dp)
+                    .padding(16.dp)
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -367,36 +372,6 @@ private fun VerticalDivider() {
             .fillMaxHeight()
             .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.2f))
     )
-}
-
-@Composable
-private fun DotMatrixBackground(
-    modifier: Modifier = Modifier,
-    dotColor: Color = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.6f),
-    background: Color = MaterialTheme.colorScheme.surfaceVariant
-) {
-    Box(modifier.background(background)) {
-        Canvas(Modifier.fillMaxWidth().fillMaxHeight()) {
-            val density = this@Canvas
-            val dotRadius = with(density) { 2.3.dp.toPx() }
-            val horizontalSpacing = with(density) { 16.dp.toPx() }
-            val verticalSpacing = with(density) { 14.dp.toPx() }
-            val cols = (size.width / horizontalSpacing).toInt() + 2
-            val rows = (size.height / verticalSpacing).toInt() + 2
-            for (row in 0 until rows) {
-                for (col in 0 until cols) {
-                    val x = col * horizontalSpacing
-                    val y = row * verticalSpacing
-                    drawCircle(
-                        color = dotColor,
-                        radius = dotRadius,
-                        center = Offset(x, y),
-                        style = Fill
-                    )
-                }
-            }
-        }
-    }
 }
 
 @Preview

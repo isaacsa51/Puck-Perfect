@@ -315,3 +315,12 @@ hs_err_pid*
 !/gradle/wrapper/gradle-wrapper.jar
 
 # End of https://www.toptal.com/developers/gitignore/api/android,androidstudio,xcode,xcodeinjection,gradle,intellij
+
+### Compose Multiplatform Resources ###
+# Font files - developers need to download these separately
+# See TYPOGRAPHY_SETUP.md for instructions
+composeApp/src/commonMain/composeResources/font/*.ttf
+composeApp/src/commonMain/composeResources/font/*.otf
+# Keep the guide files
+!composeApp/src/commonMain/composeResources/font/*.md
+!composeApp/src/commonMain/composeResources/font/*.txt

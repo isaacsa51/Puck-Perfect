@@ -32,7 +32,9 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BeansScreen() {
+fun BeansScreen(
+    onNavigateToExtraction: (beanId: Int) -> Unit = {}
+) {
     data class Extraction(
         val dose: String,
         val yield: String,
@@ -308,6 +310,7 @@ fun BeansScreen() {
 
     var selectedId by remember { mutableStateOf<Int?>(null) }
     var expandedBeanId by remember { mutableStateOf<Int?>(lastUsedBeanId) }
+    val snackbarHostState = remember { SnackbarHostState() }
 
     val sortedBeans = remember(beans, lastUsedBeanId) {
         buildList {
@@ -317,12 +320,19 @@ fun BeansScreen() {
     }
 
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         floatingActionButton = {
             FloatingToolBar(
                 modifier = Modifier,
-                onReset = { /* Reset action */ },
+                onReset = { /* Reset action - could be add new bean */ },
                 onDismiss = { /* Dismiss action */ },
-                onClick = { /* Add new coffee bean action */ }
+                onClick = {
+                    // Only navigate if a bean is selected
+                    selectedId?.let { beanId ->
+                        onNavigateToExtraction(beanId)
+                    }
+                },
+                enabled = selectedId != null // Enable button only when a bean is selected
             )
         },
         bottomBar = {},
@@ -331,15 +341,15 @@ fun BeansScreen() {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+                .padding(bottom = padding.calculateBottomPadding()),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(top = 0.dp)
         ) {
             items(sortedBeans) { bean ->
                 val selected =
                     selectedId == bean.id || (selectedId == null && bean.id == lastUsedBeanId)
                 val expanded = expandedBeanId == bean.id
                 BeanItemCard(
-                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
                     selected = selected,
                     onClick = { selectedId = bean.id },
                     name = bean.name,
@@ -368,6 +378,10 @@ fun BeansScreen() {
 @Composable
 private fun BeansScreenPreview() {
     PuckPerfectTheme {
-        BeansScreen()
+        BeansScreen(
+            onNavigateToExtraction = { beanId ->
+                println("Navigate to extraction with bean ID: $beanId")
+            }
+        )
     }
 }

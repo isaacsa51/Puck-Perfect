@@ -28,7 +28,8 @@ fun FloatingToolBar(
     onReset: () -> Unit,
     onDismiss: () -> Unit,
     onClick: () -> Unit,
-){
+    enabled: Boolean = true
+) {
     Row(
         modifier = modifier
             .clip(RoundedCornerShape(15))
@@ -54,7 +55,17 @@ fun FloatingToolBar(
             shape = CircleShape,
             onClick = onClick,
             icon = { Icon(Icons.Rounded.Check, contentDescription = "Prepare") },
-            text = { Text("Prepare") }
+            text = { Text("Prepare") },
+            containerColor = if (enabled) {
+                MaterialTheme.colorScheme.primaryContainer
+            } else {
+                MaterialTheme.colorScheme.surfaceVariant
+            },
+            contentColor = if (enabled) {
+                MaterialTheme.colorScheme.onPrimaryContainer
+            } else {
+                MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+            }
         )
     }
 }

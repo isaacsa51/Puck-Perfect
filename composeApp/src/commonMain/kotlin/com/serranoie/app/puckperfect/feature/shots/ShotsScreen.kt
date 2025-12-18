@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.fillMaxSize
@@ -57,7 +58,6 @@ fun ShotsScreen() {
         val time: String
     )
 
-    val options = listOf("Sweet", "Acid", "Bitter")
     var shots by remember {
         mutableStateOf(
             listOf(
@@ -103,8 +103,9 @@ fun ShotsScreen() {
             state = listState,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+                .padding(bottom = padding.calculateBottomPadding()),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(top = 0.dp)
         ) {
             items(shots) { shot ->
                 val flavorEnum = when (shot.flavor.uppercase()) {
@@ -112,7 +113,6 @@ fun ShotsScreen() {
                     "ACID" -> ShotFlavor.ACID
                     else -> ShotFlavor.SWEET
                 }
-                // Extract setting from grinder string e.g. 'Setting: 14' -> '14', else pass whole string
                 val settingVal =
                     shot.grinder.substringAfter(":", "").trim().takeIf { it.isNotEmpty() }
                         ?: shot.grinder

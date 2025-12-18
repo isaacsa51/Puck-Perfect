@@ -21,38 +21,80 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.serranoie.app.puckperfect.core.ui.theme.components.MainWrapper
 import com.serranoie.app.puckperfect.feature.beans.BeansScreen
+import com.serranoie.app.puckperfect.feature.extraction.ExtractionScreen
 import com.serranoie.app.puckperfect.feature.shots.ShotsScreen
 
-enum class PPNavScreen { BEANS, SHOTS, GRINDERS, MACHINES, RECIPES }
+enum class PPNavScreen { BEANS, SHOTS, GRINDERS, MACHINES, RECIPES, PROFILE, EXTRACTION }
 
 @Composable
 fun NavigationHost() {
     var selectedTab by remember { mutableStateOf(PPNavScreen.BEANS) }
+    var currentScreen by remember { mutableStateOf(PPNavScreen.BEANS) }
+    var selectedBeanId by remember { mutableStateOf<Int?>(null) }
 
     val tabsList = listOf(
         PPNavScreen.BEANS to "Beans",
         PPNavScreen.SHOTS to "Shots",
         PPNavScreen.GRINDERS to "Grinders",
         PPNavScreen.MACHINES to "Machines",
-        PPNavScreen.RECIPES to "Recipes"
+        PPNavScreen.RECIPES to "Recipes",
+        PPNavScreen.PROFILE to "Profile"
     )
-    MainWrapper(
-        title = "Puck Perfect",
-        tabs = {
-            NavigationTabs(
-                tabsList = tabsList,
-                selectedTab = selectedTab,
-                onTabSelected = { selectedTab = it }
-            )
-        },
-        content = {
-            when (selectedTab) {
-                PPNavScreen.BEANS -> BeansScreen()
-                PPNavScreen.SHOTS -> ShotsScreen()
-                PPNavScreen.GRINDERS -> Text("Grinders Screen")
-                PPNavScreen.MACHINES -> Text("Machines Screen")
-                PPNavScreen.RECIPES -> Text("Recipes Screen")
+    // Show MainWrapper only for tab screens, not for extraction
+    if (currentScreen == PPNavScreen.EXTRACTION) {
+        // Show extraction screen without tabs
+        ExtractionScreen(
+            onBackClick = {
+                currentScreen = PPNavScreen.BEANS
+                selectedTab = PPNavScreen.BEANS
+            },
+            onComplete = { grams, ratio, time, flavor ->
+                // Handle extraction completion
+                // You can save the data here or pass it to a ViewModel
+                println(
+                    """
+                    Extraction Complete!
+                    Bean ID: $selectedBeanId
+                    Grams: $grams
+                    Ratio: $ratio
+                    Time: ${time}s
+                    Flavor: $flavor
+                """.trimIndent()
+                )
             }
-        }
-    )
+        )
+    } else {
+        MainWrapper(
+            title = "Puck Perfect",
+            tabs = {
+                NavigationTabs(
+                    tabsList = tabsList,
+                    selectedTab = selectedTab,
+                    onTabSelected = {
+                        selectedTab = it
+                        currentScreen = it
+                    }
+                )
+            },
+            content = {
+                when (currentScreen) {
+                    PPNavScreen.BEANS -> BeansScreen(
+                        onNavigateToExtraction = { beanId ->
+                            selectedBeanId = beanId
+                            currentScreen = PPNavScreen.EXTRACTION
+                        }
+                    )
+
+                    PPNavScreen.SHOTS -> ShotsScreen()
+                    PPNavScreen.GRINDERS -> Text("Grinders Screen")
+                    PPNavScreen.MACHINES -> Text("Machines Screen")
+                    PPNavScreen.RECIPES -> Text("Recipes Screen")
+                    PPNavScreen.PROFILE -> Text("Profile Screen")
+                    PPNavScreen.EXTRACTION -> {
+                        // This case is handled above, outside MainWrapper
+                    }
+                }
+            }
+        )
+    }
 }

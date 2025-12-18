@@ -124,6 +124,6 @@ fun PuckPerfectTheme(
     MaterialTheme(
         colorScheme = colorScheme,
         content = content,
-        typography = Typography
+        typography = AppTypography()
     )
 }

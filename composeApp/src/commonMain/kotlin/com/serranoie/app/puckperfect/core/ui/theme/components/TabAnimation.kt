@@ -6,12 +6,15 @@ import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -22,7 +25,9 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
+import com.serranoie.app.puckperfect.core.ui.theme.PuckPerfectTheme
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.math.abs
 
 @Composable
@@ -63,7 +68,6 @@ fun TabAnimation(
                 scale.animateTo(1f, animationSpec = animationSpec)
             }
         } else {
-            // Instantly reset scale for non-selected tabs to avoid lagging animations
             scale.snapTo(1f)
         }
     }
@@ -91,27 +95,43 @@ fun TabAnimation(
     }
 
     Surface(
-        modifier = modifier
-            .padding(
-                horizontal = 8.dp,
-                vertical = 12.dp
-            )
-            .graphicsLayer {
-                scaleX = scale.value
-                translationX = offsetX.value
-            }
-            .clip(CircleShape)
-            .background(
-                color = backgroundColor,
-                shape = RoundedCornerShape(50)
-            )
-            .clickable {
-                hapticFeedback.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                onClick()
-            },
-        color = Color.Transparent,
-        shape = RoundedCornerShape(20.dp)
+        modifier = modifier.padding(
+            horizontal = 8.dp, vertical = 12.dp
+        ).graphicsLayer {
+            scaleX = scale.value
+            translationX = offsetX.value
+        }.clip(RoundedCornerShape(5.dp)).background(
+            color = backgroundColor, shape = RoundedCornerShape(8.dp)
+        ).clickable {
+            hapticFeedback.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+            onClick()
+        }, color = backgroundColor, shape = RoundedCornerShape(8.dp)
     ) {
-        content()
+        CompositionLocalProvider(LocalContentColor provides contentColor) {
+            content()
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun TabPreview() {
+    PuckPerfectTheme {
+        Row() {
+            TabAnimation(
+                modifier = Modifier,
+                index = 0,
+                selectedIndex = 0,
+                onClick = {},
+                content = { Text("Tab Title 2") })
+
+            TabAnimation(
+                modifier = Modifier,
+                index = 0,
+                selectedIndex = 1,
+                onClick = {},
+                content = { Text("Selected") })
+        }
+
     }
 }

@@ -33,7 +33,8 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BeansScreen(
-    onNavigateToExtraction: (beanId: Int) -> Unit = {}
+    onNavigateToExtraction: (beanId: Int) -> Unit = {},
+    onAddBean: () -> Unit = {}
 ) {
     data class Extraction(
         val dose: String,
@@ -324,7 +325,7 @@ fun BeansScreen(
         floatingActionButton = {
             FloatingToolBar(
                 modifier = Modifier,
-                onReset = { /* Reset action - could be add new bean */ },
+                onReset = { onAddBean() },
                 onDismiss = { /* Dismiss action */ },
                 onClick = {
                     // Only navigate if a bean is selected
@@ -381,7 +382,8 @@ private fun BeansScreenPreview() {
         BeansScreen(
             onNavigateToExtraction = { beanId ->
                 println("Navigate to extraction with bean ID: $beanId")
-            }
+            },
+            onAddBean = { println("Add bean") }
         )
     }
 }

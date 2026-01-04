@@ -1,4 +1,3 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -14,7 +13,7 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     listOf(
         iosArm64(),
         iosSimulatorArm64()
@@ -24,11 +23,12 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     sourceSets {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -41,6 +41,9 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtimeCompose)
 //            implementation(libs.koin.compose)
             implementation(compose.materialIconsExtended)
+            implementation("com.raedghazal:kotlinx_datetime_ext:1.3.2")
+            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
+            implementation("org.jetbrains.compose.material3:material3:1.9.0-alpha04")
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -57,7 +60,7 @@ android {
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
-        versionName = "1.0"
+        versionName = "0.1"
     }
     packaging {
         resources {

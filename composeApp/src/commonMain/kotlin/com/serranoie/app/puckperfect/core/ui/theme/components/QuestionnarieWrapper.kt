@@ -97,7 +97,7 @@ fun QuestionnaireWrapper(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Volver",
-                            tint = MaterialTheme.colorScheme.onSurface
+                            tint = MaterialTheme.colorScheme.surface
                         )
                     }
                 }, colors = TopAppBarDefaults.topAppBarColors(

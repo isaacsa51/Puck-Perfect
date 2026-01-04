@@ -10,7 +10,6 @@ import org.jetbrains.compose.resources.Font
 import puckperfect.composeapp.generated.resources.Res
 import puckperfect.composeapp.generated.resources.archivo
 import puckperfect.composeapp.generated.resources.syne
-import puckperfect.composeapp.generated.resources.syne
 import puckperfect.composeapp.generated.resources.worksans
 
 /**
@@ -46,10 +45,6 @@ object DisplaySmallCondensedConfig {
     const val WEIGHT = 500
 }
 
-/**
- * Font families for the app
- * These use Compose Multiplatform resources to load fonts from commonMain/composeResources/font/
- */
 @Composable
 fun displayFontFamily() = FontFamily(
     Font(Res.font.syne, FontWeight.Normal),
@@ -211,7 +206,7 @@ fun Typography.displayLargeExpressive(): TextStyle {
         fontSize = 57.sp,
         lineHeight = 64.sp,
         letterSpacing = (-0.25).sp,
-        fontWeight = FontWeight.Black,
+        fontWeight = FontWeight(DisplayLargeConfig.WEIGHT),
     )
 }
 
@@ -223,7 +218,7 @@ fun Typography.displayMediumExpressive(): TextStyle {
         fontSize = 45.sp,
         lineHeight = 52.sp,
         letterSpacing = 0.sp,
-        fontWeight = FontWeight.ExtraBold,
+        fontWeight = FontWeight(DisplayMediumConfig.WEIGHT),
     )
 }
 
@@ -235,7 +230,7 @@ fun Typography.displaySmallExpressive(): TextStyle {
         fontSize = 36.sp,
         lineHeight = 44.sp,
         letterSpacing = 0.sp,
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight(DisplaySmallConfig.WEIGHT),
     )
 }
 
@@ -247,7 +242,7 @@ fun Typography.headlineLargeExpressive(): TextStyle {
         fontSize = 32.sp,
         lineHeight = 40.sp,
         letterSpacing = 0.sp,
-        fontWeight = FontWeight.ExtraBold,
+        fontWeight = FontWeight(DisplayMediumConfig.WEIGHT), // Use 800
     )
 }
 
@@ -259,7 +254,7 @@ fun Typography.headlineMediumExpressive(): TextStyle {
         fontSize = 28.sp,
         lineHeight = 36.sp,
         letterSpacing = 0.sp,
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight(DisplaySmallConfig.WEIGHT), // Use 700
     )
 }
 
@@ -271,7 +266,7 @@ fun Typography.headlineSmallExpressive(): TextStyle {
         fontSize = 24.sp,
         lineHeight = 32.sp,
         letterSpacing = 0.sp,
-        fontWeight = FontWeight.SemiBold,
+        fontWeight = FontWeight(DisplaySmallConfig.WEIGHT),
     )
 }
 
@@ -283,7 +278,7 @@ fun Typography.titleLargeExpressive(): TextStyle {
         fontSize = 22.sp,
         lineHeight = 28.sp,
         letterSpacing = 0.sp,
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight(DisplaySmallConfig.WEIGHT),
     )
 }
 
@@ -295,7 +290,7 @@ fun Typography.titleMediumExpressive(): TextStyle {
         fontSize = 16.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.15.sp,
-        fontWeight = FontWeight.SemiBold,
+        fontWeight = FontWeight(DisplaySmallConfig.WEIGHT),
     )
 }
 
@@ -307,7 +302,7 @@ fun Typography.titleSmallExpressive(): TextStyle {
         fontSize = 14.sp,
         lineHeight = 20.sp,
         letterSpacing = 0.1.sp,
-        fontWeight = FontWeight.SemiBold,
+        fontWeight = FontWeight(DisplaySmallConfig.WEIGHT),
     )
 }
 
@@ -319,7 +314,7 @@ fun Typography.labelLargeExpressive(): TextStyle {
         fontSize = 14.sp,
         lineHeight = 20.sp,
         letterSpacing = 0.1.sp,
-        fontWeight = FontWeight.SemiBold,
+        fontWeight = FontWeight(DisplaySmallConfig.WEIGHT),
     )
 }
 
@@ -331,7 +326,7 @@ fun Typography.labelMediumExpressive(): TextStyle {
         fontSize = 12.sp,
         lineHeight = 16.sp,
         letterSpacing = 0.5.sp,
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight(DisplaySmallConfig.WEIGHT),
     )
 }
 
@@ -343,7 +338,7 @@ fun Typography.labelSmallExpressive(): TextStyle {
         fontSize = 11.sp,
         lineHeight = 16.sp,
         letterSpacing = 0.5.sp,
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight(DisplaySmallConfig.WEIGHT),
     )
 }
 
@@ -359,7 +354,7 @@ fun Typography.displayLargeCondensed(): TextStyle {
         fontSize = 57.sp,
         lineHeight = 64.sp,
         letterSpacing = (-0.25).sp,
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight(DisplayLargeCondensedConfig.WEIGHT),
     )
 }
 
@@ -371,7 +366,7 @@ fun Typography.displayMediumCondensed(): TextStyle {
         fontSize = 45.sp,
         lineHeight = 52.sp,
         letterSpacing = 0.sp,
-        fontWeight = FontWeight.SemiBold,
+        fontWeight = FontWeight(DisplayMediumCondensedConfig.WEIGHT),
     )
 }
 
@@ -383,7 +378,7 @@ fun Typography.displaySmallCondensed(): TextStyle {
         fontSize = 36.sp,
         lineHeight = 44.sp,
         letterSpacing = 0.sp,
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight(DisplaySmallCondensedConfig.WEIGHT),
     )
 }
 
@@ -395,7 +390,7 @@ fun Typography.headlineLargeCondensed(): TextStyle {
         fontSize = 32.sp,
         lineHeight = 40.sp,
         letterSpacing = 0.sp,
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight(DisplayLargeCondensedConfig.WEIGHT),
     )
 }
 
@@ -407,7 +402,7 @@ fun Typography.headlineMediumCondensed(): TextStyle {
         fontSize = 28.sp,
         lineHeight = 36.sp,
         letterSpacing = 0.sp,
-        fontWeight = FontWeight.SemiBold,
+        fontWeight = FontWeight(DisplayMediumCondensedConfig.WEIGHT),
     )
 }
 
@@ -419,7 +414,7 @@ fun Typography.headlineSmallCondensed(): TextStyle {
         fontSize = 24.sp,
         lineHeight = 32.sp,
         letterSpacing = 0.sp,
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight(DisplaySmallCondensedConfig.WEIGHT),
     )
 }
 
@@ -431,7 +426,7 @@ fun Typography.titleLargeCondensed(): TextStyle {
         fontSize = 22.sp,
         lineHeight = 28.sp,
         letterSpacing = 0.sp,
-        fontWeight = FontWeight.SemiBold,
+        fontWeight = FontWeight(DisplaySmallCondensedConfig.WEIGHT),
     )
 }
 
@@ -443,7 +438,7 @@ fun Typography.titleMediumCondensed(): TextStyle {
         fontSize = 16.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.15.sp,
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight(DisplaySmallCondensedConfig.WEIGHT),
     )
 }
 
@@ -455,7 +450,7 @@ fun Typography.titleSmallCondensed(): TextStyle {
         fontSize = 14.sp,
         lineHeight = 20.sp,
         letterSpacing = 0.1.sp,
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight(DisplaySmallCondensedConfig.WEIGHT),
     )
 }
 
@@ -467,7 +462,7 @@ fun Typography.labelLargeCondensed(): TextStyle {
         fontSize = 14.sp,
         lineHeight = 20.sp,
         letterSpacing = 0.1.sp,
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight(DisplaySmallCondensedConfig.WEIGHT),
     )
 }
 
@@ -479,7 +474,7 @@ fun Typography.labelMediumCondensed(): TextStyle {
         fontSize = 12.sp,
         lineHeight = 16.sp,
         letterSpacing = 0.5.sp,
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight(DisplaySmallCondensedConfig.WEIGHT),
     )
 }
 
@@ -491,6 +486,6 @@ fun Typography.labelSmallCondensed(): TextStyle {
         fontSize = 11.sp,
         lineHeight = 16.sp,
         letterSpacing = 0.5.sp,
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight(DisplaySmallCondensedConfig.WEIGHT),
     )
 }

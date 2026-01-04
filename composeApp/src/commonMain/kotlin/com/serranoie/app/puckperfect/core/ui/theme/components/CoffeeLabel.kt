@@ -35,6 +35,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.serranoie.app.puckperfect.core.ui.theme.PuckPerfectTheme
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import com.serranoie.app.puckperfect.core.ui.theme.displaySmallExpressive
+import com.serranoie.app.puckperfect.core.ui.theme.labelLargeExpressive
+import com.serranoie.app.puckperfect.core.ui.theme.labelMediumCondensed
+import com.serranoie.app.puckperfect.core.ui.theme.titleLargeExpressive
+import com.serranoie.app.puckperfect.core.ui.theme.titleMediumCondensed
+import com.serranoie.app.puckperfect.core.ui.theme.titleMediumExpressive
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -62,28 +69,28 @@ fun DottedDivider(
 }
 
 @Composable
-fun CoffeeLabel() {
+fun CoffeeLabel(
+    brand: String,
+    roast: String,
+    country: String,
+    date: String,
+    processing: String = "WASHED",
+    modifier: Modifier = Modifier
+) {
     val outlineColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.15f)
     val headerBg = MaterialTheme.colorScheme.primary.copy(alpha = 0.95f)
     val topCircleDiameter = 64.dp
 
     Surface {
         Box(
-            modifier = Modifier
-                .width(220.dp)
-                .wrapContentHeight()
-                .border(
-                    2.dp,
-                    outlineColor,
-                    shape = RoundedCornerShape(8.dp)
-                )
+            modifier = modifier.border(
+                2.dp, outlineColor, shape = RoundedCornerShape(8.dp)
+            )
         ) {
             Column(modifier = Modifier.fillMaxWidth()) {
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(headerBg)
-                        .border(2.dp, outlineColor, RoundedCornerShape(8.dp))
+                    modifier = Modifier.fillMaxWidth().background(headerBg)
+                        .border(1.dp, outlineColor, RoundedCornerShape(8.dp))
                         .padding(vertical = 20.dp)
                 ) {
                     Column(
@@ -91,134 +98,110 @@ fun CoffeeLabel() {
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Box(
-                            modifier = Modifier
-                                .size(topCircleDiameter)
-                                .clip(CircleShape)
+                            modifier = Modifier.size(topCircleDiameter).clip(CircleShape)
                                 .background(MaterialTheme.colorScheme.surface)
                                 .border(2.dp, outlineColor, CircleShape),
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                "☕",
-                                fontSize = 30.sp
+                                "☕", fontSize = 30.sp
                             )
                         }
                         Spacer(modifier = Modifier.height(12.dp))
                         Text(
-                            "COFFEE BRAND",
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 18.sp,
-                            letterSpacing = 2.sp
+                            brand,
+                            color = MaterialTheme.colorScheme.surface,
+                            style = MaterialTheme.typography.displaySmallExpressive()
+                                .copy(fontWeight = FontWeight.Black),
+                            textAlign = TextAlign.Center
                         )
                     }
                 }
                 // Roasted beans header/section
                 Box(
-                    Modifier
-                        .fillMaxWidth()
-                        .height(44.dp)
-                        .border(2.dp, outlineColor)
-                        .padding(vertical = 8.dp),
-                    contentAlignment = Alignment.CenterStart
+                    Modifier.fillMaxWidth().height(44.dp).border(1.dp, outlineColor)
+                        .padding(vertical = 8.dp), contentAlignment = Alignment.CenterStart
                 ) {
                     Text(
                         "ROASTED BEANS",
                         modifier = Modifier.align(Alignment.Center),
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp,
-                        letterSpacing = 3.sp
+                        style = MaterialTheme.typography.titleLargeExpressive()
                     )
                 }
 
                 // Roast/Country row
                 Row(
-                    Modifier
-                        .fillMaxWidth()
-                        .border(2.dp, outlineColor)
-                        .height(IntrinsicSize.Max),
+                    Modifier.fillMaxWidth().border(1.dp, outlineColor).height(IntrinsicSize.Max),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Column(Modifier.weight(1f).padding(8.dp)) {
                         Text(
                             "ROAST",
-                            fontSize = 10.sp,
-                            color = Color.Gray,
-                            letterSpacing = 1.sp
+                            style = MaterialTheme.typography.labelMediumCondensed(),
+                            color = MaterialTheme.colorScheme.outline,
+                            letterSpacing = 1.sp,
+                            modifier = Modifier.padding(bottom = 4.dp)
                         )
                         Text(
-                            "MEDIUM",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 14.sp
+                            roast,
+                            style = MaterialTheme.typography.titleMediumExpressive(),
                         )
                     }
                     // vertical divider
                     Box(
-                        Modifier
-                            .fillMaxHeight()
-                            .width(2.dp)
-                            .background(outlineColor)
+                        Modifier.fillMaxHeight().width(2.dp).background(outlineColor)
                     )
                     Column(Modifier.weight(1f).padding(8.dp)) {
                         Text(
                             "COUNTRY",
-                            fontSize = 10.sp,
-                            color = Color.Gray,
-                            letterSpacing = 1.sp
+                            style = MaterialTheme.typography.labelMediumCondensed(),
+                            color = MaterialTheme.colorScheme.outline,
+                            letterSpacing = 1.sp,
+                            modifier = Modifier.padding(bottom = 4.dp)
                         )
                         Text(
-                            "ETHIOPIA",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 14.sp
+                            country,
+                            style = MaterialTheme.typography.titleMediumExpressive(),
                         )
                     }
                 }
                 // Processing/date row
                 Row(
-                    Modifier
-                        .height(IntrinsicSize.Max)
-                        .border(2.dp, outlineColor)
-                        .fillMaxWidth(),
+                    Modifier.height(IntrinsicSize.Max).border(1.dp, outlineColor).fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Column(Modifier.weight(1f).padding(8.dp)) {
                         Text(
                             "PROCESSING",
-                            fontSize = 10.sp,
-                            color = Color.Gray,
-                            letterSpacing = 1.sp
+                            style = MaterialTheme.typography.labelMediumCondensed(),
+                            color = MaterialTheme.colorScheme.outline,
+                            letterSpacing = 1.sp,
+                            modifier = Modifier.padding(bottom = 4.dp)
                         )
                         Text(
-                            "WASHED",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 14.sp
+                            processing,
+                            style = MaterialTheme.typography.titleMediumExpressive(),
                         )
                     }
                     // vertical divider
                     Box(
-                        Modifier
-                            .width(2.dp)
-                            .fillMaxHeight()
-                            .background(outlineColor)
+                        Modifier.width(2.dp).fillMaxHeight().background(outlineColor)
                     )
                     Column(
                         Modifier.weight(1f).padding(8.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        val dateNumbers = listOf("17", "06", "23")
-                        dateNumbers.forEachIndexed { i, number ->
+                        val dateParts = date.split("-").take(3).reversed()
+                        dateParts.forEachIndexed { i, part ->
                             Text(
-                                number,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 13.sp
+                                part,
+                                style = MaterialTheme.typography.titleLargeExpressive(),
                             )
-                            if (i < dateNumbers.lastIndex) {
+                            if (i < dateParts.lastIndex) {
                                 Spacer(Modifier.height(6.dp))
                                 DottedDivider(
-                                    modifier = Modifier
-                                        .padding(horizontal = 0.dp)
-                                        .height(5.dp),
+                                    modifier = Modifier.padding(horizontal = 0.dp).height(5.dp),
                                 )
                                 Spacer(Modifier.height(6.dp))
                             }
@@ -227,9 +210,7 @@ fun CoffeeLabel() {
                 }
                 // Bottom placeholder section
                 Box(
-                    Modifier
-                        .fillMaxWidth()
-                        .border(2.dp, outlineColor, RoundedCornerShape(8.dp))
+                    Modifier.fillMaxWidth().border(1.dp, outlineColor, RoundedCornerShape(8.dp))
                 ) {
                     // You can add lines/pattern or a watermark style as placeholder if desired
                 }
@@ -243,6 +224,10 @@ fun CoffeeLabel() {
 @Composable
 private fun CoffeeLabelPreview() {
     Column {
-        PuckPerfectTheme { CoffeeLabel() }
+        PuckPerfectTheme {
+            CoffeeLabel(
+                brand = "COFFEE BRAND", roast = "MEDIUM", country = "ETHIOPIA", date = "2023-06-17"
+            )
+        }
     }
 }

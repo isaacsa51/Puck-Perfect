@@ -55,6 +55,8 @@ import androidx.compose.ui.unit.sp
 import com.serranoie.app.puckperfect.core.ui.theme.PuckPerfectTheme
 import com.serranoie.app.puckperfect.core.ui.theme.components.backgrounds.DotMatrixBackground
 import com.serranoie.app.puckperfect.core.ui.theme.components.util.RandomBackground
+import com.serranoie.app.puckperfect.core.ui.theme.headlineMediumExpressive
+import com.serranoie.app.puckperfect.core.ui.theme.labelMediumCondensed
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 data class LastExtractionUi(
@@ -81,28 +83,21 @@ fun BeanItemCard(
     beanId: Int = name.hashCode() // Use name hash as seed for consistent backgrounds
 ) {
     Card(
-        modifier = modifier
-            .padding(6.dp)
-            .fillMaxWidth()
-            .wrapContentHeight()
+        modifier = modifier.padding(6.dp).fillMaxWidth().wrapContentHeight()
             .clickable { onClick() },
         shape = RoundedCornerShape(10.dp),
     ) {
         // Top hero banner
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
+            modifier = Modifier.fillMaxWidth().wrapContentHeight()
                 .clip(RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp))
         ) {
             RandomBackground(
-                seed = beanId,
-                modifier = Modifier.matchParentSize()
+                seed = beanId, modifier = Modifier.matchParentSize()
             )
             Column(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
+                Modifier.fillMaxWidth().padding(start = 16.dp, top = 8.dp, end = 16.dp),
+                verticalArrangement = Arrangement.Center
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -113,7 +108,7 @@ fun BeanItemCard(
                         label = {
                             Text(
                                 roast.uppercase(),
-                                style = MaterialTheme.typography.labelMedium,
+                                style = MaterialTheme.typography.labelMediumCondensed(),
                                 fontWeight = FontWeight.Bold
                             )
                         },
@@ -122,8 +117,7 @@ fun BeanItemCard(
                         colors = AssistChipDefaults.assistChipColors(
                             labelColor = MaterialTheme.colorScheme.onPrimary,
                             containerColor = MaterialTheme.colorScheme.primary
-                        ),
-                        modifier = Modifier.padding(bottom = 8.dp)
+                        )
                     )
                     if (selected) {
                         Icon(
@@ -134,25 +128,23 @@ fun BeanItemCard(
                         )
                     }
                 }
-
+                Spacer(Modifier.height(8.dp))
                 Text(
                     name.uppercase(),
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.ExtraBold,
-                    lineHeight = 44.sp,
+                    style = MaterialTheme.typography.headlineMediumExpressive(),
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     origin,
                     style = MaterialTheme.typography.titleSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(bottom = 8.dp)
                 )
             }
         }
-        Divider(
-            Modifier.fillMaxWidth(),
-            color = MaterialTheme.colorScheme.outline.copy(alpha = 0.16f)
+        HorizontalDivider(
+            Modifier.fillMaxWidth(), color = MaterialTheme.colorScheme.outline.copy(alpha = 0.16f)
         )
         TextButton(
             onClick = onToggleExtraction,
@@ -160,8 +152,7 @@ fun BeanItemCard(
             modifier = Modifier.padding(start = 16.dp, end = 12.dp)
         ) {
             val rotation by animateFloatAsState(
-                targetValue = if (showExtraction) 180f else 0f,
-                animationSpec = tween(300)
+                targetValue = if (showExtraction) 180f else 0f, animationSpec = tween(300)
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
@@ -180,10 +171,7 @@ fun BeanItemCard(
                 Icon(
                     imageVector = Icons.Default.KeyboardArrowDown,
                     contentDescription = if (showExtraction) "Collapse" else "Expand",
-                    modifier = Modifier
-                        .size(22.dp)
-                        .graphicsLayer { rotationZ = rotation }
-                )
+                    modifier = Modifier.size(22.dp).graphicsLayer { rotationZ = rotation })
             }
         }
         AnimatedVisibility(showExtraction) {
@@ -217,14 +205,11 @@ private fun ExtractionStatsRow(
         )
 
         Row(
-            Modifier
-                .fillMaxWidth()
-                .height(IntrinsicSize.Min),
+            Modifier.fillMaxWidth().height(IntrinsicSize.Min),
             horizontalArrangement = Arrangement.spacedBy(0.dp)
         ) {
             Column(
-                modifier = Modifier.weight(1f),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
                     text = "DOSE",
@@ -245,8 +230,7 @@ private fun ExtractionStatsRow(
             VerticalDivider()
             // YIELD
             Column(
-                modifier = Modifier.weight(1f),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
                     "YIELD",
@@ -267,8 +251,7 @@ private fun ExtractionStatsRow(
             VerticalDivider()
             // TIME
             Column(
-                modifier = Modifier.weight(1f),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
                     "TIME",
@@ -297,9 +280,8 @@ private fun ExtractionStatsRow(
                 modifier = Modifier.weight(1f)
             ) {
                 Column(
-                    Modifier
-                        .padding(vertical = 12.dp)
-                        .fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally
+                    Modifier.padding(vertical = 12.dp).fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
                         "GRIND SETTING",
@@ -322,9 +304,7 @@ private fun ExtractionStatsRow(
                 modifier = Modifier.weight(1f)
             ) {
                 Column(
-                    Modifier
-                        .padding(vertical = 12.dp)
-                        .fillMaxWidth(),
+                    Modifier.padding(vertical = 12.dp).fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
@@ -367,9 +347,7 @@ private fun ExtractionStatsRow(
 @Composable
 private fun VerticalDivider() {
     Box(
-        Modifier
-            .width(1.dp)
-            .fillMaxHeight()
+        Modifier.width(1.dp).fillMaxHeight()
             .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.2f))
     )
 }

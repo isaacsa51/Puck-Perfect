@@ -1,23 +1,18 @@
 package com.serranoie.app.puckperfect.core.ui.theme.components
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Warning
+import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -25,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,6 +30,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.serranoie.app.puckperfect.core.ui.theme.PuckPerfectTheme
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.FluidAnimatedVisibility
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.FluidSpacing
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidAnimateContentSize
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidPadding
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidSize
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.scaledSp
 import com.serranoie.app.puckperfect.core.ui.theme.displaySmallExpressive
 import com.serranoie.app.puckperfect.core.ui.theme.labelMediumCondensed
 import com.serranoie.app.puckperfect.core.ui.theme.labelSmallCondensed
@@ -51,66 +53,78 @@ fun ShotItem(
     yield: String,
     time: String,
     flavor: ShotFlavor,
-    underExtracted: Boolean = false
+    underExtracted: Boolean = false,
 ) {
     val surface = MaterialTheme.colorScheme.surfaceContainerHigh
     val error = MaterialTheme.colorScheme.error
-    val outline = MaterialTheme.colorScheme.outline.copy(alpha = 0.25f)
     val isWarning = (flavor == ShotFlavor.BITTER || flavor == ShotFlavor.ACID)
-    val border = if (isWarning) error else outline
-    val flavorLabel = when (flavor) {
-        ShotFlavor.SWEET -> "SWEET"
-        ShotFlavor.BITTER -> "BITTER"
-        ShotFlavor.ACID -> "SOUR"
-    }
-    val chipColor = when (flavor) {
-        ShotFlavor.SWEET -> MaterialTheme.colorScheme.surfaceVariant
-        else -> error
-    }
-    val chipBg = when (flavor) {
-        ShotFlavor.SWEET -> MaterialTheme.colorScheme.primaryContainer
-        else -> Color.Transparent
-    }
+    val flavorLabel =
+        when (flavor) {
+            ShotFlavor.SWEET -> "SWEET"
+            ShotFlavor.BITTER -> "BITTER"
+            ShotFlavor.ACID -> "SOUR"
+        }
+    val chipColor =
+        when (flavor) {
+            ShotFlavor.SWEET -> MaterialTheme.colorScheme.surfaceVariant
+            else -> error
+        }
+    val chipBg =
+        when (flavor) {
+            ShotFlavor.SWEET -> MaterialTheme.colorScheme.primary
+            else -> Color.Transparent
+        }
 
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(6.dp),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .fluidPadding(4.dp),
         shape = RoundedCornerShape(10.dp),
         border = if (isWarning) BorderStroke(1.25.dp, error) else null,
-        colors = CardDefaults.cardColors(containerColor = surface)
+        colors = CardDefaults.cardColors(containerColor = surface),
     ) {
-        Column(Modifier.padding(vertical = 18.dp, horizontal = 18.dp)) {
-            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        Column(
+            Modifier.fluidPadding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(FluidSpacing.extraSmall()),
+        ) {
+            Row(
+                Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(FluidSpacing.small()),
+            ) {
                 if (flavor == ShotFlavor.SWEET) {
                     Surface(
                         color = chipBg,
                         shape = CircleShape,
-                        shadowElevation = 0.dp
+                        shadowElevation = 0.dp,
+                        modifier = Modifier.fluidAnimateContentSize(),
                     ) {
                         Text(
                             flavorLabel,
                             color = chipColor,
                             fontWeight = FontWeight.Black,
-                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-                            style = MaterialTheme.typography.labelMedium
+                            modifier = Modifier.fluidPadding(horizontal = 12.dp, vertical = 6.dp),
+                            style = MaterialTheme.typography.labelMedium,
                         )
                     }
                 } else {
                     Surface(
                         shape = CircleShape,
                         color = MaterialTheme.colorScheme.errorContainer,
-                        shadowElevation = 0.dp
+                        shadowElevation = 0.dp,
+                        modifier = Modifier.fluidAnimateContentSize(),
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+                            modifier = Modifier.fluidPadding(horizontal = 10.dp, vertical = 4.dp),
+                            horizontalArrangement = Arrangement.spacedBy(FluidSpacing.extraSmall()),
                         ) {
                             Text(
                                 flavorLabel,
                                 color = error,
                                 fontWeight = FontWeight.Black,
-                                style = MaterialTheme.typography.labelMedium
+                                style = MaterialTheme.typography.labelMedium,
                             )
                         }
                     }
@@ -121,62 +135,67 @@ fun ShotItem(
                     style = MaterialTheme.typography.labelMediumCondensed(),
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.73f),
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
                 )
             }
-            Spacer(Modifier.height(5.dp))
+
             Text(
                 beanName.uppercase(),
                 style = MaterialTheme.typography.displaySmallExpressive(),
                 fontWeight = FontWeight.Bold,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.padding(bottom = 2.dp)
             )
-            if (underExtracted && isWarning) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+
+            FluidAnimatedVisibility(
+                visible = underExtracted && isWarning,
+                modifier = Modifier.fluidAnimateContentSize(),
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(FluidSpacing.extraSmall()),
+                ) {
                     Icon(
-                        imageVector = Icons.Outlined.Warning,
+                        imageVector = Icons.Rounded.Warning,
                         contentDescription = "Under extracted",
                         tint = error,
-                        modifier = Modifier.size(16.dp)
+                        modifier = Modifier.fluidSize(12.dp),
                     )
                     Text(
                         "Under-extracted",
                         color = error,
                         fontWeight = FontWeight.SemiBold,
                         style = MaterialTheme.typography.labelSmallCondensed(),
-                        modifier = Modifier.padding(start = 4.dp)
                     )
                 }
-
             }
-            HorizontalDivider(Modifier.padding(vertical = 8.dp))
+
+            HorizontalDivider(Modifier.fluidPadding(vertical = 4.dp))
             Row(
                 Modifier
                     .fillMaxWidth()
                     .height(IntrinsicSize.Min),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 ShotStatColumn(
                     label = grinder,
                     value = grinderSetting,
                     unit = "",
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 )
                 VerticalDivider()
                 ShotStatColumn(
                     label = "YIELD",
                     value = yield,
                     unit = "g",
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 )
                 VerticalDivider()
                 ShotStatColumn(
                     label = "TIME",
                     value = time,
                     unit = "s",
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 )
             }
         }
@@ -184,46 +203,47 @@ fun ShotItem(
 }
 
 @Composable
-private fun ShotStatColumn(label: String, value: String, unit: String, modifier: Modifier) {
+private fun ShotStatColumn(
+    label: String,
+    value: String,
+    unit: String,
+    modifier: Modifier,
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
+        verticalArrangement = Arrangement.spacedBy(FluidSpacing.extraSmall()),
+        modifier = modifier,
     ) {
         Text(
             label.uppercase(),
             style = MaterialTheme.typography.labelSmallCondensed(),
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        Row(verticalAlignment = Alignment.Bottom) {
+        Row(
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.spacedBy(2.scaledSp()),
+        ) {
             Text(
                 value,
                 style = MaterialTheme.typography.titleLargeExpressive(),
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onSurface,
             )
             if (unit.isNotEmpty()) {
-                Spacer(Modifier.width(2.dp))
-                Text(unit, fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(
+                    unit,
+                    fontSize = 13.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
             }
         }
     }
 }
 
-@Composable
-private fun VerticalDivider() {
-    Box(
-        Modifier
-            .width(1.dp)
-            .fillMaxHeight()
-            .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.14f))
-    )
-}
-
-@Preview
+@Preview()
 @Composable
 private fun ShotPreview() {
     PuckPerfectTheme {
         Column {
-
             ShotItem(
                 beanName = "La Gracia Dulce",
                 dateTime = "Today",
@@ -232,7 +252,7 @@ private fun ShotPreview() {
                 yield = "30",
                 time = "25",
                 flavor = ShotFlavor.BITTER,
-                underExtracted = true
+                underExtracted = true,
             )
 
             ShotItem(
@@ -243,7 +263,7 @@ private fun ShotPreview() {
                 yield = "30",
                 time = "25",
                 flavor = ShotFlavor.SWEET,
-                underExtracted = false
+                underExtracted = false,
             )
         }
     }

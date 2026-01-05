@@ -32,6 +32,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.serranoie.app.puckperfect.core.ui.theme.PuckPerfectTheme
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.CompactSpacing
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidHeight
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidPadding
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidSize
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidSpace
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.scaledSp
 import com.serranoie.app.puckperfect.core.ui.theme.titleLargeExpressive
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -50,30 +56,41 @@ fun BeanProcessMethodCard(
     val elevation = if (selected) 8.dp else 0.dp
 
     Box(
-        modifier = modifier.shadow(elevation, RoundedCornerShape(16.dp), clip = false)
-            .clip(RoundedCornerShape(16.dp)).background(backgroundColor)
-            .border(width = 2.dp, color = borderColor, shape = RoundedCornerShape(16.dp))
-            .clickable { onClick() }, contentAlignment = Alignment.TopEnd
+        modifier = modifier
+            .shadow(elevation, RoundedCornerShape(16.scaledSp()), clip = false)
+            .clip(RoundedCornerShape(16.scaledSp()))
+            .background(backgroundColor)
+            .border(
+                width = 2.dp, 
+                color = borderColor, 
+                shape = RoundedCornerShape(16.scaledSp())
+            )
+            .clickable { onClick() }, 
+        contentAlignment = Alignment.TopEnd
     ) {
         Column(
-            modifier = Modifier.padding(horizontal = 14.dp, vertical = 18.dp).fillMaxWidth(),
-            verticalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fluidPadding(horizontal = 14.dp, vertical = 18.dp)
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(CompactSpacing.small()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Box(
-                modifier = Modifier.size(62.dp).background(
-                    MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f),
-                    shape = CircleShape
-                ), contentAlignment = Alignment.Center
+                modifier = Modifier
+                    .fluidSize(62.dp)
+                    .background(
+                        MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f),
+                        shape = CircleShape
+                    ), 
+                contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = processType.icon,
                     contentDescription = processType.name,
-                    modifier = Modifier.size(36.dp),
+                    modifier = Modifier.fluidSize(36.dp),
                     tint = MaterialTheme.colorScheme.primary
                 )
             }
-            Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = processType.name,
                 style = MaterialTheme.typography.titleLargeExpressive(),
@@ -81,7 +98,6 @@ fun BeanProcessMethodCard(
                 color = MaterialTheme.colorScheme.onSurface,
                 textAlign = TextAlign.Center,
             )
-            Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = processType.description,
                 style = MaterialTheme.typography.bodyLarge,
@@ -103,8 +119,8 @@ fun BeanProcessMethodCardList(
         columns = StaggeredGridCells.Fixed(2),
         modifier = modifier,
         userScrollEnabled = true,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalItemSpacing = 8.dp
+        horizontalArrangement = Arrangement.spacedBy(fluidSpace(8.dp)),
+        verticalItemSpacing = fluidSpace(8.dp)
     ) {
         items(processOptions) { process ->
             BeanProcessMethodCard(

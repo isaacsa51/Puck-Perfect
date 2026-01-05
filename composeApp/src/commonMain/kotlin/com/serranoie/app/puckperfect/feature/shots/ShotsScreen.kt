@@ -1,48 +1,37 @@
 package com.serranoie.app.puckperfect.feature.shots
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
-import androidx.compose.material3.InputChip
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.SwipeToDismissBox
-import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.serranoie.app.puckperfect.core.ui.theme.PuckPerfectTheme
 import com.serranoie.app.puckperfect.core.ui.theme.components.ShotFlavor
 import com.serranoie.app.puckperfect.core.ui.theme.components.ShotItem
-import kotlinx.coroutines.launch
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.CompactSpacing
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.FluidAnimatedVisibility
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidAnimateContentSize
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidSize
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidSpace
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,7 +44,7 @@ fun ShotsScreen() {
         val flavor: String,
         val grinder: String,
         val weight: String,
-        val time: String
+        val time: String,
     )
 
     var shots by remember {
@@ -81,7 +70,7 @@ fun ShotsScreen() {
                 Shot(18, "Java Estate", "Sweet", "Setting: 15", "35", "33s"),
                 Shot(19, "Mexico Altura", "Bitter", "Setting: 14", "33", "34s"),
                 Shot(20, "Vietnam Robusta", "Acid", "Setting: 12", "36", "29s"),
-            )
+            ),
         )
     }
     val listState = rememberLazyListState()
@@ -93,39 +82,55 @@ fun ShotsScreen() {
             ExtendedFloatingActionButton(
                 onClick = { /* Add shot action */ },
                 expanded = expandedFab,
-                icon = { Icon(Icons.Filled.Add, contentDescription = "Add Shot") },
+                icon = {
+                    Icon(
+                        Icons.Filled.Add,
+                        contentDescription = "Add Shot",
+                        modifier = Modifier.fluidSize(16.dp),
+                    )
+                },
                 text = { Text(text = "New Espresso") },
+                modifier = Modifier.fluidAnimateContentSize(),
             )
         },
         floatingActionButtonPosition = FabPosition.End,
     ) { padding ->
         LazyColumn(
             state = listState,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(bottom = padding.calculateBottomPadding()),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(top = 0.dp)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(bottom = padding.calculateBottomPadding()),
+            contentPadding = PaddingValues(top = 0.dp),
         ) {
-            items(shots) { shot ->
-                val flavorEnum = when (shot.flavor.uppercase()) {
-                    "BITTER" -> ShotFlavor.BITTER
-                    "ACID" -> ShotFlavor.ACID
-                    else -> ShotFlavor.SWEET
-                }
+            items(shots, key = { it.id }) { shot ->
+                val flavorEnum =
+                    when (shot.flavor.uppercase()) {
+                        "BITTER" -> ShotFlavor.BITTER
+                        "ACID" -> ShotFlavor.ACID
+                        else -> ShotFlavor.SWEET
+                    }
                 val settingVal =
-                    shot.grinder.substringAfter(":", "").trim().takeIf { it.isNotEmpty() }
+                    shot.grinder
+                        .substringAfter(":", "")
+                        .trim()
+                        .takeIf { it.isNotEmpty() }
                         ?: shot.grinder
-                ShotItem(
-                    beanName = shot.bean,
-                    dateTime = "Today", // Replace with real date/time if you have it
-                    grinder = "Grinder", // You can split this further if you have a grinder model name
-                    grinderSetting = settingVal,
-                    yield = shot.weight,
-                    time = shot.time.trimEnd('s', 'S'),
-                    flavor = flavorEnum,
-                    underExtracted = flavorEnum != ShotFlavor.SWEET
-                )
+
+                FluidAnimatedVisibility(
+                    visible = true,
+                ) {
+                    ShotItem(
+                        beanName = shot.bean,
+                        dateTime = "Today",
+                        grinder = "Grinder", // You can split this further if you have a grinder model name
+                        grinderSetting = settingVal,
+                        yield = shot.weight,
+                        time = shot.time.trimEnd('s', 'S'),
+                        flavor = flavorEnum,
+                        underExtracted = flavorEnum != ShotFlavor.SWEET,
+                    )
+                }
             }
         }
     }

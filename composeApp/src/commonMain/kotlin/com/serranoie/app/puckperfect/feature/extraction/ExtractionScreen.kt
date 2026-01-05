@@ -7,9 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -19,7 +16,6 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -37,7 +33,6 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import kotlinx.coroutines.delay
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -48,11 +43,17 @@ import com.serranoie.app.puckperfect.core.ui.theme.PuckPerfectTheme
 import com.serranoie.app.puckperfect.core.ui.theme.components.GramsSlider
 import com.serranoie.app.puckperfect.core.ui.theme.components.QuestionnaireWrapper
 import com.serranoie.app.puckperfect.core.ui.theme.components.TimerDisplay
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.FluidSpacing
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidAnimateContentSize
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidHeight
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidPadding
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidSize
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidSpace
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.scaledSp
 import com.serranoie.app.puckperfect.core.ui.theme.labelLargeCondensed
 import com.serranoie.app.puckperfect.core.ui.theme.labelLargeExpressive
 import com.serranoie.app.puckperfect.core.ui.theme.labelMediumCondensed
-import com.serranoie.app.puckperfect.core.ui.theme.labelSmallCondensed
-import com.serranoie.app.puckperfect.core.ui.theme.titleSmallCondensed
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 enum class FlavorProfile {
@@ -112,23 +113,31 @@ fun ExtractionScreen(
     }
 
     if (showCustomDialog) {
-        AlertDialog(onDismissRequest = { showCustomDialog = false }, title = {
-            Text("Custom Grams Value")
-        }, text = {
-            Column {
-                Text(
-                    "Enter a custom grams value:", modifier = Modifier.padding(bottom = 8.dp)
-                )
-                OutlinedTextField(
-                    value = customGramsInput,
-                    onValueChange = { customGramsInput = it },
-                    label = { Text("Grams") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                    singleLine = true,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-        }, confirmButton = {
+        AlertDialog(
+            onDismissRequest = { showCustomDialog = false }, 
+            title = {
+                Text("Custom Grams Value")
+            }, 
+            text = {
+                Column(
+                    modifier = Modifier.fluidAnimateContentSize(),
+                    verticalArrangement = Arrangement.spacedBy(FluidSpacing.small())
+                ) {
+                    Text(
+                        "Enter a custom grams value:", 
+                        modifier = Modifier.fluidPadding(bottom = 8.dp)
+                    )
+                    OutlinedTextField(
+                        value = customGramsInput,
+                        onValueChange = { customGramsInput = it },
+                        label = { Text("Grams") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            }, 
+            confirmButton = {
             TextButton(
                 onClick = {
                     val customValue = customGramsInput.toFloatOrNull()
@@ -166,10 +175,15 @@ fun ExtractionScreen(
         previousStep = previousStep,
         topExtras = {
             if (currentStep == 0) {
-                Row(modifier = Modifier.clickable { showCustomDialog = true }
-                    .padding(vertical = 4.dp).fillMaxWidth(),
+                Row(
+                    modifier = Modifier
+                        .clickable { showCustomDialog = true }
+                        .fluidPadding(vertical = 4.dp)
+                        .fillMaxWidth()
+                        .fluidAnimateContentSize(),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center) {
+                    horizontalArrangement = Arrangement.spacedBy(FluidSpacing.small(), Alignment.CenterHorizontally)
+                ) {
                     Text(
                         text = "Custom value",
                         color = MaterialTheme.colorScheme.primary,
@@ -180,7 +194,7 @@ fun ExtractionScreen(
                         imageVector = Icons.Default.Edit,
                         contentDescription = "Edit custom value",
                         tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.padding(start = 8.dp)
+                        modifier = Modifier.fluidSize(20.dp)
                     )
                 }
             }
@@ -239,8 +253,10 @@ fun ExtractionScreen(
             if (currentStep == 3) {
                 // Timer controls - layout changes based on timer state
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fluidAnimateContentSize(),
+                    horizontalArrangement = Arrangement.spacedBy(fluidSpace(12.dp)),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     if (isTimerFinished) {
@@ -251,13 +267,18 @@ fun ExtractionScreen(
                                 isTimerRunning = false
                                 isTimerFinished = false
                             },
-                            modifier = Modifier.weight(1f).height(56.dp),
-                            shape = RoundedCornerShape(10.dp)
+                            modifier = Modifier
+                                .weight(1f)
+                                .fluidHeight(56.dp)
+                                .fluidAnimateContentSize(),
+                            shape = RoundedCornerShape(10.scaledSp())
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Refresh,
                                 contentDescription = "Reset",
-                                modifier = Modifier.padding(end = 4.dp)
+                                modifier = Modifier
+                                    .fluidSize(22.dp)
+                                    .fluidPadding(end = 4.dp)
                             )
                             Text(
                                 "Reset",
@@ -272,8 +293,11 @@ fun ExtractionScreen(
                                 previousStep = currentStep
                                 currentStep++
                             },
-                            modifier = Modifier.weight(2f).height(56.dp),
-                            shape = RoundedCornerShape(10.dp)
+                            modifier = Modifier
+                                .weight(2f)
+                                .fluidHeight(56.dp)
+                                .fluidAnimateContentSize(),
+                            shape = RoundedCornerShape(10.scaledSp())
                         ) {
                             Text(
                                 "Next",
@@ -290,8 +314,11 @@ fun ExtractionScreen(
                                 isTimerRunning = false
                                 isTimerFinished = false
                             },
-                            modifier = Modifier.weight(1f).height(56.dp),
-                            shape = RoundedCornerShape(10.dp)
+                            modifier = Modifier
+                                .weight(1f)
+                                .fluidHeight(56.dp)
+                                .fluidAnimateContentSize(),
+                            shape = RoundedCornerShape(10.scaledSp())
                         ) {
                             Text(
                                 "Reset",
@@ -307,14 +334,19 @@ fun ExtractionScreen(
                                     isTimerRunning = !isTimerRunning
                                 }
                             },
-                            modifier = Modifier.weight(2f).height(56.dp),
-                            shape = RoundedCornerShape(10.dp),
+                            modifier = Modifier
+                                .weight(2f)
+                                .fluidHeight(56.dp)
+                                .fluidAnimateContentSize(),
+                            shape = RoundedCornerShape(10.scaledSp()),
                             enabled = remainingTime > 0
                         ) {
                             Icon(
                                 imageVector = if (isTimerRunning) Icons.Default.Pause else Icons.Default.PlayArrow,
                                 contentDescription = if (isTimerRunning) "Pause" else "Play",
-                                modifier = Modifier.padding(end = 4.dp)
+                                modifier = Modifier
+                                    .fluidSize(22.dp)
+                                    .fluidPadding(end = 4.dp)
                             )
                             Text(
                                 if (isTimerRunning) "Pause" else "Play",
@@ -328,8 +360,10 @@ fun ExtractionScreen(
             } else {
                 // Regular navigation buttons for other steps
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fluidAnimateContentSize(),
+                    horizontalArrangement = Arrangement.spacedBy(fluidSpace(12.dp))
                 ) {
                     // Back button (show on all steps except first)
                     if (currentStep > 0) {
@@ -344,8 +378,10 @@ fun ExtractionScreen(
                                     isTimerFinished = false
                                 }
                             },
-                            modifier = Modifier.weight(1f).height(56.dp),
-                            shape = RoundedCornerShape(10.dp)
+                            modifier = Modifier
+                                .weight(1f)
+                                .fluidHeight(56.dp),
+                            shape = RoundedCornerShape(10.scaledSp())
                         ) {
                             Text(
                                 "Back",
@@ -377,8 +413,10 @@ fun ExtractionScreen(
                                 )
                             }
                         },
-                        modifier = Modifier.weight(if (currentStep > 0) 2f else 1f).height(56.dp),
-                        shape = RoundedCornerShape(10.dp),
+                        modifier = Modifier
+                            .weight(if (currentStep > 0) 2f else 1f)
+                            .fluidHeight(56.dp),
+                        shape = RoundedCornerShape(10.scaledSp()),
                         enabled = when (currentStep) {
                             4 -> selectedFlavor != null // Flavor step is now step 4
                             else -> true
@@ -398,18 +436,21 @@ fun ExtractionScreen(
             when (currentStep) {
                 0 -> {
                     Row(
-                        modifier = Modifier.padding(top = 16.dp),
-                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier
+                            .fluidPadding(top = 16.dp)
+                            .fluidAnimateContentSize(),
+                        horizontalArrangement = Arrangement.spacedBy(FluidSpacing.medium(), Alignment.CenterHorizontally),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
                             text = "Show decimals",
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            style = MaterialTheme.typography.labelLargeCondensed(),
-                            modifier = Modifier.padding(end = 12.dp)
+                            style = MaterialTheme.typography.labelLargeCondensed()
                         )
                         Switch(
-                            checked = showDecimals, onCheckedChange = { showDecimals = it })
+                            checked = showDecimals, 
+                            onCheckedChange = { showDecimals = it }
+                        )
                     }
                 }
                 1 -> {
@@ -417,7 +458,7 @@ fun ExtractionScreen(
                         text = "Ratio is the quantity of water to espresso.",
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         style = MaterialTheme.typography.labelMediumCondensed(),
-                        modifier = Modifier.padding(8.dp),
+                        modifier = Modifier.fluidPadding(8.dp)
                     )
                 }
                 3 -> {
@@ -425,7 +466,7 @@ fun ExtractionScreen(
                         text = "Suggested time to extraction is between 25 to 30 seconds.",
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         style = MaterialTheme.typography.labelMediumCondensed(),
-                        modifier = Modifier.padding(8.dp),
+                        modifier = Modifier.fluidPadding(8.dp)
                     )
                 }
             }
@@ -448,8 +489,11 @@ private fun RatioSelector(
     }
 
     Column(
-        modifier = modifier.fillMaxSize().padding(24.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterVertically),
+        modifier = modifier
+            .fillMaxSize()
+            .fluidPadding(24.dp)
+            .fluidAnimateContentSize(),
+        verticalArrangement = Arrangement.spacedBy(fluidSpace(12.dp), Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         ratios.forEach { ratio ->
@@ -461,7 +505,10 @@ private fun RatioSelector(
                         text = ratio, fontSize = 20.sp, fontWeight = FontWeight.Bold
                     )
                 },
-                modifier = Modifier.fillMaxWidth(0.8f).height(56.dp),
+                modifier = Modifier
+                    .fillMaxWidth(0.8f)
+                    .fluidHeight(56.dp)
+                    .fluidAnimateContentSize(),
                 colors = FilterChipDefaults.filterChipColors(
                     selectedContainerColor = MaterialTheme.colorScheme.primary,
                     selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
@@ -471,14 +518,14 @@ private fun RatioSelector(
             )
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.fluidHeight(8.dp))
 
         // Show calculation for selected ratio
         val espressoOutput = calculateEspresso(selectedRatio)
         Row(
-            horizontalArrangement = Arrangement.Center,
+            horizontalArrangement = Arrangement.spacedBy(FluidSpacing.small(), Alignment.CenterHorizontally),
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(top = 8.dp)
+            modifier = Modifier.fluidPadding(top = 8.dp)
         ) {
             Text(
                 text = "${formatFloat(gramsOfCoffee)} g of coffee",
@@ -486,7 +533,9 @@ private fun RatioSelector(
                 style = MaterialTheme.typography.labelLargeCondensed()
             )
             HorizontalDivider(
-                modifier = Modifier.fillMaxWidth(0.3f).padding(vertical = 4.dp, horizontal = 8.dp),
+                modifier = Modifier
+                    .fillMaxWidth(0.3f)
+                    .fluidPadding(vertical = 4.dp, horizontal = 8.dp),
                 color = MaterialTheme.colorScheme.onSurface
             )
             Text(
@@ -505,7 +554,10 @@ private fun TimeSelector(
     val timeOptions = listOf(20, 25, 30, 35, 40, 45, 50, 55, 60)
 
     Column(
-        modifier = modifier.fillMaxSize().padding(24.dp),
+        modifier = modifier
+            .fillMaxSize()
+            .fluidPadding(24.dp)
+            .fluidAnimateContentSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -515,14 +567,18 @@ private fun TimeSelector(
             style = MaterialTheme.typography.displayLarge,
             color = MaterialTheme.colorScheme.primary,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 32.dp)
+            modifier = Modifier
+                .fluidPadding(bottom = 32.dp)
+                .fluidAnimateContentSize()
         )
 
         // Time options in grid
         timeOptions.chunked(3).forEach { rowTimes ->
             Row(
-                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fluidPadding(vertical = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(fluidSpace(12.dp), Alignment.CenterHorizontally)
             ) {
                 rowTimes.forEach { time ->
                     FilterChip(
@@ -533,7 +589,10 @@ private fun TimeSelector(
                                 text = "${time}s", fontSize = 18.sp, fontWeight = FontWeight.Bold
                             )
                         },
-                        modifier = Modifier.height(64.dp).weight(1f),
+                        modifier = Modifier
+                            .fluidHeight(64.dp)
+                            .weight(1f)
+                            .fluidAnimateContentSize(),
                         colors = FilterChipDefaults.filterChipColors(
                             selectedContainerColor = MaterialTheme.colorScheme.primary,
                             selectedLabelColor = MaterialTheme.colorScheme.onPrimary
@@ -549,13 +608,15 @@ private fun TimeSelector(
 
         // Custom time adjustment
         Row(
-            modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
-            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .fluidPadding(top = 24.dp),
+            horizontalArrangement = Arrangement.spacedBy(FluidSpacing.medium(), Alignment.CenterHorizontally),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Button(
                 onClick = { if (selectedTime > 10) onTimeSelected(selectedTime - 5) },
-                modifier = Modifier.padding(end = 16.dp)
+                modifier = Modifier.fluidAnimateContentSize()
             ) {
                 Text("-5s", fontSize = 16.sp, fontWeight = FontWeight.Bold)
             }
@@ -567,7 +628,7 @@ private fun TimeSelector(
             )
             Button(
                 onClick = { if (selectedTime < 120) onTimeSelected(selectedTime + 5) },
-                modifier = Modifier.padding(start = 16.dp)
+                modifier = Modifier.fluidAnimateContentSize()
             ) {
                 Text("+5s", fontSize = 16.sp, fontWeight = FontWeight.Bold)
             }
@@ -582,12 +643,16 @@ private fun FlavorSelector(
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier.fillMaxSize().padding(24.dp),
+        modifier = modifier
+            .fillMaxSize()
+            .fluidPadding(24.dp)
+            .fluidAnimateContentSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)
+            modifier = Modifier.fillMaxWidth(), 
+            horizontalArrangement = Arrangement.spacedBy(fluidSpace(12.dp))
         ) {
             FlavorProfile.entries.forEach { flavor ->
                 FilterChip(
@@ -598,7 +663,10 @@ private fun FlavorSelector(
                             text = flavor.name, fontSize = 18.sp, fontWeight = FontWeight.Bold
                         )
                     },
-                    modifier = Modifier.height(80.dp).weight(1f),
+                    modifier = Modifier
+                        .fluidHeight(80.dp)
+                        .weight(1f)
+                        .fluidAnimateContentSize(),
                     colors = FilterChipDefaults.filterChipColors(
                         selectedContainerColor = MaterialTheme.colorScheme.primary,
                         selectedLabelColor = MaterialTheme.colorScheme.onPrimary

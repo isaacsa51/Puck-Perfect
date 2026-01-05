@@ -52,17 +52,16 @@ fun FloatingToolBar(
         ExtendedFloatingActionButton(
             modifier = Modifier
                 .align(Alignment.CenterVertically),
-            shape = CircleShape,
             onClick = onClick,
             icon = { Icon(Icons.Rounded.Check, contentDescription = "Prepare") },
             text = { Text("Prepare") },
             containerColor = if (enabled) {
-                MaterialTheme.colorScheme.primaryContainer
+                MaterialTheme.colorScheme.tertiaryContainer
             } else {
                 MaterialTheme.colorScheme.surfaceVariant
             },
             contentColor = if (enabled) {
-                MaterialTheme.colorScheme.onPrimaryContainer
+                MaterialTheme.colorScheme.onTertiaryContainer
             } else {
                 MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
             }

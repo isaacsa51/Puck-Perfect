@@ -60,7 +60,6 @@ fun TabAnimation(
         label = "Tab Content Color"
     )
 
-    // Handles the "pop" animation for the selected tab.
     LaunchedEffect(isSelected) {
         if (isSelected) {
             launch {
@@ -72,24 +71,20 @@ fun TabAnimation(
         }
     }
 
-    // Handles the offset for neighbor tabs when selection changes.
     LaunchedEffect(selectedIndex) {
         if (!isSelected) {
             val distance = index - selectedIndex
-            if (abs(distance) == 1) { // Only affect direct neighbors
+            if (abs(distance) == 1) {
                 val direction = if (distance > 0) 1 else -1
-                // Move neighbors slightly
                 val offsetValue = 12f * direction
                 launch {
                     offsetX.animateTo(offsetValue, animationSpec = animationSpec)
                     offsetX.animateTo(0f, animationSpec = animationSpec)
                 }
             } else {
-                // Instantly reset offset for non-neighbor tabs
                 offsetX.snapTo(0f)
             }
         } else {
-            // Ensure the selected tab itself has no offset
             offsetX.snapTo(0f)
         }
     }

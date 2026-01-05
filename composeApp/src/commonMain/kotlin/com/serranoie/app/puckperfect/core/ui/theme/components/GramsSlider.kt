@@ -36,6 +36,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.serranoie.app.puckperfect.core.ui.theme.PuckPerfectTheme
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.FluidTypography
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidHeight
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidPadding
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidScale
 import com.serranoie.app.puckperfect.core.ui.theme.displayMediumCondensed
 import com.serranoie.app.puckperfect.core.ui.theme.displayMediumExpressive
 import kotlinx.coroutines.delay
@@ -43,6 +47,17 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.math.abs
 import kotlin.math.absoluteValue
 
+/**
+ * Vertical scrolling picker for selecting gram values with smooth animations.
+ * Features a centered, large display with scaling effects for surrounding values.
+ *
+ * @param currentGrams The currently selected gram value
+ * @param minGrams Minimum selectable value
+ * @param maxGrams Maximum selectable value
+ * @param showDecimals Whether to show decimal places (0.1 precision)
+ * @param stepSize Step increment between values
+ * @param onValueChanged Callback when the selected value changes
+ */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun GramsSlider(
@@ -78,6 +93,9 @@ fun GramsSlider(
     val snapBehavior = rememberSnapFlingBehavior(lazyListState = listState)
     var isTogglingDecimals by remember { mutableStateOf(false) }
     val currentCenteredIndex by remember { derivedStateOf { listState.firstVisibleItemIndex } }
+    
+    // Use fluid scale for item height to scale with font preferences
+    val fontScale = fluidScale()
     val itemHeight = 120.dp
 
     LaunchedEffect(currentCenteredIndex) {
@@ -119,7 +137,7 @@ fun GramsSlider(
                 state = listState,
                 flingBehavior = snapBehavior,
                 horizontalAlignment = Alignment.CenterHorizontally,
-                contentPadding = PaddingValues(vertical = verticalPadding),
+                contentPadding = PaddingValues(vertical = verticalPadding * fontScale),
                 modifier = Modifier.fillMaxSize()
             ) {
                 items(values, key = { it }) { value ->
@@ -151,7 +169,7 @@ fun GramsSlider(
                         label = "letterSpacingAnimation"
                     )
                     Box(
-                        modifier = Modifier.height(itemHeight).fillMaxWidth(),
+                        modifier = Modifier.fluidHeight(itemHeight).fillMaxWidth(),
                         contentAlignment = Alignment.Center
                     ) {
                         Column(
@@ -174,10 +192,8 @@ fun GramsSlider(
                                 modifier = Modifier,
                                 lineHeight = animatedFontSize.sp
                             )
-                            if (isCentered) {
-
-                            } else {
-                                Spacer(modifier = Modifier.height(24.dp))
+                            if (!isCentered) {
+                                Spacer(modifier = Modifier.fluidHeight(24.dp))
                             }
                         }
                     }

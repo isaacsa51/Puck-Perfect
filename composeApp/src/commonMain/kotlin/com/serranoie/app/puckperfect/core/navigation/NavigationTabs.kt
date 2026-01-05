@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.serranoie.app.puckperfect.core.ui.theme.components.TabAnimation
-import com.serranoie.app.puckperfect.core.ui.theme.labelLargeCondensed
 import com.serranoie.app.puckperfect.core.ui.theme.labelLargeExpressive
 
 @Composable
@@ -35,11 +34,10 @@ fun NavigationTabs(
                         style = if (isSelected) {
                             MaterialTheme.typography.labelLargeExpressive()
                         } else {
-                            MaterialTheme.typography.labelLargeCondensed()
+                            MaterialTheme.typography.labelLarge
                         }
                     )
-                }
-            )
+                })
         }
     }
 }

@@ -30,12 +30,19 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.serranoie.app.puckperfect.core.ui.theme.PuckPerfectTheme
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.CompactSpacing
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.FluidTypography
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidHeight
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidPadding
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidSize
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidWidth
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.scaledSp
 import com.serranoie.app.puckperfect.core.ui.theme.displaySmallExpressive
 import com.serranoie.app.puckperfect.core.ui.theme.labelLargeExpressive
 import com.serranoie.app.puckperfect.core.ui.theme.labelMediumCondensed
@@ -44,6 +51,10 @@ import com.serranoie.app.puckperfect.core.ui.theme.titleMediumCondensed
 import com.serranoie.app.puckperfect.core.ui.theme.titleMediumExpressive
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+/**
+ * Dotted divider component for decorative separators.
+ * Draws a series of circular dots across the width.
+ */
 @Composable
 fun DottedDivider(
     modifier: Modifier = Modifier,
@@ -52,7 +63,11 @@ fun DottedDivider(
     dotSpacing: Dp = 5.dp,
     dotDiameter: Dp = 3.dp
 ) {
-    Canvas(modifier = modifier.fillMaxWidth().height(thickness)) {
+    Canvas(
+        modifier = modifier
+            .fillMaxWidth()
+            .fluidHeight(thickness)
+    ) {
         val width = size.width
         val dotSpacePx = dotSpacing.toPx()
         val dotRadiusPx = dotDiameter.toPx() / 2f
@@ -68,6 +83,17 @@ fun DottedDivider(
     }
 }
 
+/**
+ * Coffee label component displaying coffee bean information in a vintage label style.
+ * Features brand, roast level, country of origin, processing method, and roast date.
+ *
+ * @param brand The coffee brand name
+ * @param roast Roast level (e.g., LIGHT, MEDIUM, DARK)
+ * @param country Country of origin
+ * @param date Roast date in YYYY-MM-DD format
+ * @param processing Processing method (e.g., WASHED, NATURAL, HONEY)
+ * @param modifier Optional modifier for the label container
+ */
 @Composable
 fun CoffeeLabel(
     brand: String,
@@ -79,37 +105,48 @@ fun CoffeeLabel(
 ) {
     val outlineColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.15f)
     val headerBg = MaterialTheme.colorScheme.primary.copy(alpha = 0.95f)
-    val topCircleDiameter = 64.dp
+    val borderRadius = 8.scaledSp()
 
     Surface {
         Box(
-            modifier = modifier.border(
-                2.dp, outlineColor, shape = RoundedCornerShape(8.dp)
-            )
+            modifier = modifier
+                .border(
+                    width = 2.dp,
+                    color = outlineColor,
+                    shape = RoundedCornerShape(borderRadius)
+                )
         ) {
             Column(modifier = Modifier.fillMaxWidth()) {
+                // Header section with brand and logo
                 Box(
-                    modifier = Modifier.fillMaxWidth().background(headerBg)
-                        .border(1.dp, outlineColor, RoundedCornerShape(8.dp))
-                        .padding(vertical = 20.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(headerBg)
+                        .border(1.dp, outlineColor, RoundedCornerShape(borderRadius))
+                        .fluidPadding(vertical = 20.dp)
                 ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(CompactSpacing.medium()),
                         modifier = Modifier.fillMaxWidth()
                     ) {
+                        // Coffee icon in circle
                         Box(
-                            modifier = Modifier.size(topCircleDiameter).clip(CircleShape)
+                            modifier = Modifier
+                                .fluidSize(64.dp)
+                                .clip(CircleShape)
                                 .background(MaterialTheme.colorScheme.surface)
                                 .border(2.dp, outlineColor, CircleShape),
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                "☕", fontSize = 30.sp
+                                text = "☕",
+                                fontSize = FluidTypography.headline
                             )
                         }
-                        Spacer(modifier = Modifier.height(12.dp))
+                        // Brand name
                         Text(
-                            brand,
+                            text = brand,
                             color = MaterialTheme.colorScheme.surface,
                             style = MaterialTheme.typography.displaySmallExpressive()
                                 .copy(fontWeight = FontWeight.Black),
@@ -117,107 +154,138 @@ fun CoffeeLabel(
                         )
                     }
                 }
-                // Roasted beans header/section
+                // "ROASTED BEANS" banner
                 Box(
-                    Modifier.fillMaxWidth().height(44.dp).border(1.dp, outlineColor)
-                        .padding(vertical = 8.dp), contentAlignment = Alignment.CenterStart
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fluidHeight(44.dp)
+                        .border(1.dp, outlineColor)
+                        .fluidPadding(vertical = 8.dp),
+                    contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        "ROASTED BEANS",
-                        modifier = Modifier.align(Alignment.Center),
+                        text = "ROASTED BEANS",
                         style = MaterialTheme.typography.titleLargeExpressive()
                     )
                 }
 
-                // Roast/Country row
+                // Roast / Country row
                 Row(
-                    Modifier.fillMaxWidth().border(1.dp, outlineColor).height(IntrinsicSize.Max),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .border(1.dp, outlineColor)
+                        .height(IntrinsicSize.Max),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Column(Modifier.weight(1f).padding(8.dp)) {
-                        Text(
-                            "ROAST",
-                            style = MaterialTheme.typography.labelMediumCondensed(),
-                            color = MaterialTheme.colorScheme.outline,
-                            letterSpacing = 1.sp,
-                            modifier = Modifier.padding(bottom = 4.dp)
-                        )
-                        Text(
-                            roast,
-                            style = MaterialTheme.typography.titleMediumExpressive(),
-                        )
-                    }
-                    // vertical divider
-                    Box(
-                        Modifier.fillMaxHeight().width(2.dp).background(outlineColor)
+                    // Roast column
+                    LabelInfoColumn(
+                        label = "ROAST",
+                        value = roast,
+                        modifier = Modifier.weight(1f)
                     )
-                    Column(Modifier.weight(1f).padding(8.dp)) {
-                        Text(
-                            "COUNTRY",
-                            style = MaterialTheme.typography.labelMediumCondensed(),
-                            color = MaterialTheme.colorScheme.outline,
-                            letterSpacing = 1.sp,
-                            modifier = Modifier.padding(bottom = 4.dp)
-                        )
-                        Text(
-                            country,
-                            style = MaterialTheme.typography.titleMediumExpressive(),
-                        )
-                    }
+                    
+                    // Vertical divider
+                    Box(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .fluidWidth(2.dp)
+                            .background(outlineColor)
+                    )
+                    
+                    // Country column
+                    LabelInfoColumn(
+                        label = "COUNTRY",
+                        value = country,
+                        modifier = Modifier.weight(1f)
+                    )
                 }
-                // Processing/date row
+                // Processing / Date row
                 Row(
-                    Modifier.height(IntrinsicSize.Max).border(1.dp, outlineColor).fillMaxWidth(),
+                    modifier = Modifier
+                        .height(IntrinsicSize.Max)
+                        .border(1.dp, outlineColor)
+                        .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Column(Modifier.weight(1f).padding(8.dp)) {
-                        Text(
-                            "PROCESSING",
-                            style = MaterialTheme.typography.labelMediumCondensed(),
-                            color = MaterialTheme.colorScheme.outline,
-                            letterSpacing = 1.sp,
-                            modifier = Modifier.padding(bottom = 4.dp)
-                        )
-                        Text(
-                            processing,
-                            style = MaterialTheme.typography.titleMediumExpressive(),
-                        )
-                    }
-                    // vertical divider
-                    Box(
-                        Modifier.width(2.dp).fillMaxHeight().background(outlineColor)
+                    // Processing column
+                    LabelInfoColumn(
+                        label = "PROCESSING",
+                        value = processing,
+                        modifier = Modifier.weight(1f)
                     )
+                    
+                    // Vertical divider
+                    Box(
+                        modifier = Modifier
+                            .fluidWidth(2.dp)
+                            .fillMaxHeight()
+                            .background(outlineColor)
+                    )
+                    
+                    // Date column
                     Column(
-                        Modifier.weight(1f).padding(8.dp),
+                        modifier = Modifier
+                            .weight(1f)
+                            .fluidPadding(8.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
                         val dateParts = date.split("-").take(3).reversed()
-                        dateParts.forEachIndexed { i, part ->
+                        dateParts.forEachIndexed { index, part ->
                             Text(
-                                part,
-                                style = MaterialTheme.typography.titleLargeExpressive(),
+                                text = part,
+                                style = MaterialTheme.typography.titleLargeExpressive()
                             )
-                            if (i < dateParts.lastIndex) {
-                                Spacer(Modifier.height(6.dp))
+                            if (index < dateParts.lastIndex) {
+                                Spacer(modifier = Modifier.fluidHeight(6.dp))
                                 DottedDivider(
-                                    modifier = Modifier.padding(horizontal = 0.dp).height(5.dp),
+                                    modifier = Modifier
+                                        .fluidPadding(horizontal = 0.dp)
+                                        .fluidHeight(5.dp)
                                 )
-                                Spacer(Modifier.height(6.dp))
+                                Spacer(modifier = Modifier.fluidHeight(6.dp))
                             }
                         }
                     }
                 }
-                // Bottom placeholder section
+                // Bottom decorative section
                 Box(
-                    Modifier.fillMaxWidth().border(1.dp, outlineColor, RoundedCornerShape(8.dp))
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .border(1.dp, outlineColor, RoundedCornerShape(borderRadius))
                 ) {
-                    // You can add lines/pattern or a watermark style as placeholder if desired
+                    // Placeholder for additional decorative elements or watermark
                 }
             }
         }
     }
+}
 
+/**
+ * Reusable component for label info sections (label + value).
+ * Used for displaying roast, country, and processing information.
+ */
+@Composable
+private fun LabelInfoColumn(
+    label: String,
+    value: String,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier.fluidPadding(8.dp),
+        verticalArrangement = Arrangement.spacedBy(CompactSpacing.extraSmall())
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelMediumCondensed(),
+            color = MaterialTheme.colorScheme.outline,
+            letterSpacing = 1.sp
+        )
+        Text(
+            text = value,
+            style = MaterialTheme.typography.titleMediumExpressive()
+        )
+    }
 }
 
 @Preview(showBackground = true)

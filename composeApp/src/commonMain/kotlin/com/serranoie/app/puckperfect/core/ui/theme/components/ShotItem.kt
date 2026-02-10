@@ -30,10 +30,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.serranoie.app.puckperfect.core.ui.theme.PuckPerfectTheme
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.AureaSpacing
 import com.serranoie.app.puckperfect.core.ui.theme.components.util.FluidAnimatedVisibility
-import com.serranoie.app.puckperfect.core.ui.theme.components.util.FluidSpacing
 import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidAnimateContentSize
-import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidPadding
 import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidSize
 import com.serranoie.app.puckperfect.core.ui.theme.components.util.scaledSp
 import com.serranoie.app.puckperfect.core.ui.theme.displaySmallExpressive
@@ -46,6 +45,7 @@ enum class ShotFlavor { SWEET, BITTER, ACID }
 
 @Composable
 fun ShotItem(
+    modifier: Modifier = Modifier,
     beanName: String,
     dateTime: String,
     grinder: String,
@@ -77,21 +77,21 @@ fun ShotItem(
 
     Card(
         modifier =
-            Modifier
+            modifier
                 .fillMaxWidth()
-                .fluidPadding(4.dp),
+                .padding(4.dp),
         shape = RoundedCornerShape(10.dp),
         border = if (isWarning) BorderStroke(1.25.dp, error) else null,
         colors = CardDefaults.cardColors(containerColor = surface),
     ) {
         Column(
-            Modifier.fluidPadding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(FluidSpacing.extraSmall()),
+            Modifier.padding(AureaSpacing.current.s),
+            verticalArrangement = Arrangement.spacedBy(AureaSpacing.current.xs),
         ) {
             Row(
                 Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(FluidSpacing.small()),
+                horizontalArrangement = Arrangement.spacedBy(AureaSpacing.current.s),
             ) {
                 if (flavor == ShotFlavor.SWEET) {
                     Surface(
@@ -104,7 +104,7 @@ fun ShotItem(
                             flavorLabel,
                             color = chipColor,
                             fontWeight = FontWeight.Black,
-                            modifier = Modifier.fluidPadding(horizontal = 12.dp, vertical = 6.dp),
+                            modifier = Modifier.padding(horizontal = AureaSpacing.current.s, vertical = AureaSpacing.current.xs),
                             style = MaterialTheme.typography.labelMedium,
                         )
                     }
@@ -117,8 +117,8 @@ fun ShotItem(
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.fluidPadding(horizontal = 10.dp, vertical = 4.dp),
-                            horizontalArrangement = Arrangement.spacedBy(FluidSpacing.extraSmall()),
+                            modifier = Modifier.padding(horizontal = AureaSpacing.current.s, vertical = 4.dp),
+                            horizontalArrangement = Arrangement.spacedBy(AureaSpacing.current.xs),
                         ) {
                             Text(
                                 flavorLabel,
@@ -153,7 +153,7 @@ fun ShotItem(
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(FluidSpacing.extraSmall()),
+                    horizontalArrangement = Arrangement.spacedBy(AureaSpacing.current.xs),
                 ) {
                     Icon(
                         imageVector = Icons.Rounded.Warning,
@@ -170,7 +170,7 @@ fun ShotItem(
                 }
             }
 
-            HorizontalDivider(Modifier.fluidPadding(vertical = 4.dp))
+            HorizontalDivider(Modifier.padding(vertical = 4.dp))
             Row(
                 Modifier
                     .fillMaxWidth()
@@ -211,7 +211,7 @@ private fun ShotStatColumn(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(FluidSpacing.extraSmall()),
+        verticalArrangement = Arrangement.spacedBy(AureaSpacing.current.xs),
         modifier = modifier,
     ) {
         Text(
@@ -245,6 +245,7 @@ private fun ShotPreview() {
     PuckPerfectTheme {
         Column {
             ShotItem(
+                modifier = Modifier,
                 beanName = "La Gracia Dulce",
                 dateTime = "Today",
                 grinder = "Mazzer Mini",
@@ -256,6 +257,7 @@ private fun ShotPreview() {
             )
 
             ShotItem(
+                modifier = Modifier,
                 beanName = "La Gracia Dulce",
                 dateTime = "15 December",
                 grinder = "Mazzer Mini",

@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -39,9 +40,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.serranoie.app.puckperfect.core.ui.theme.PuckPerfectTheme
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.AureaSpacing
 import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidHeight
-import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidPadding
-import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidScale
 import com.serranoie.app.puckperfect.core.ui.theme.headlineSmallExpressive
 import com.serranoie.app.puckperfect.core.ui.theme.labelLargeExpressive
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -123,7 +123,7 @@ fun QuestionnaireWrapper(
                         Modifier
                             .fillMaxWidth()
                             .background(surfaceColor)
-                            .fluidPadding(horizontal = 24.dp, vertical = 4.dp),
+                            .padding(horizontal = AureaSpacing.current.l, vertical = 4.dp),
                 )
 
                 topExtras?.let {
@@ -132,7 +132,7 @@ fun QuestionnaireWrapper(
                             Modifier
                                 .fillMaxWidth()
                                 .background(surfaceColor)
-                                .fluidPadding(horizontal = 24.dp, vertical = 8.dp),
+                                .padding(horizontal = AureaSpacing.current.l, vertical = AureaSpacing.current.s),
                     ) {
                         it()
                     }
@@ -148,13 +148,13 @@ fun QuestionnaireWrapper(
                             color = surfaceColor,
                             shape =
                                 RoundedCornerShape(
-                                    bottomStart = 24.dp * fluidScale(),
-                                    bottomEnd = 24.dp * fluidScale(),
+                                    bottomStart = AureaSpacing.current.l,
+                                    bottomEnd = AureaSpacing.current.l,
                                 ),
                         ).clip(
                             RoundedCornerShape(
-                                bottomStart = 24.dp * fluidScale(),
-                                bottomEnd = 24.dp * fluidScale(),
+                                bottomStart = AureaSpacing.current.l,
+                                bottomEnd = AureaSpacing.current.l,
                             ),
                         ),
                 contentAlignment = Alignment.Center,
@@ -188,7 +188,7 @@ fun QuestionnaireWrapper(
                             .fillMaxWidth()
                             .background(darkSectionColor)
                             .navigationBarsPadding()
-                            .fluidPadding(16.dp),
+                            .padding(AureaSpacing.current.m),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     // Question text
@@ -206,7 +206,7 @@ fun QuestionnaireWrapper(
                             color = MaterialTheme.colorScheme.onSurface,
                             style = MaterialTheme.typography.headlineSmallExpressive(),
                             fontWeight = FontWeight.Bold,
-                            modifier = Modifier.fluidPadding(bottom = 16.dp).fillMaxWidth(),
+                            modifier = Modifier.padding(bottom = AureaSpacing.current.m).fillMaxWidth(),
                             textAlign = TextAlign.Center,
                         )
                     }
@@ -240,12 +240,12 @@ private fun WrapperPreview() {
             bottomActions = {
                 Button(
                     onClick = { },
-                    modifier = Modifier.fillMaxWidth().fluidHeight(36.dp),
-                    shape = RoundedCornerShape(28.dp * fluidScale()),
+                    modifier = Modifier.fillMaxWidth().height(56.dp),
+                    shape = RoundedCornerShape(AureaSpacing.current.l),
                 ) {
                     Text(
                         "Action",
-                        fontSize = 18.sp * fluidScale(),
+                        fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.labelLargeExpressive(),
                     )
@@ -255,8 +255,8 @@ private fun WrapperPreview() {
                 Text(
                     "Optional extras go here",
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontSize = 12.sp * fluidScale(),
-                    modifier = Modifier.fluidPadding(top = 16.dp),
+                    fontSize = 12.sp,
+                    modifier = Modifier.padding(top = AureaSpacing.current.m),
                 )
             },
         )

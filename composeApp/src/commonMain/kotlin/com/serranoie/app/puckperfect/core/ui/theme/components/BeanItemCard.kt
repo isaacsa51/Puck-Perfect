@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -43,11 +44,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.serranoie.app.puckperfect.core.ui.theme.PuckPerfectTheme
-import com.serranoie.app.puckperfect.core.ui.theme.components.util.CompactSpacing
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.AureaSpacing
 import com.serranoie.app.puckperfect.core.ui.theme.components.util.FluidAnimatedVisibility
 import com.serranoie.app.puckperfect.core.ui.theme.components.util.RandomBackground
 import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidAnimateContentSize
-import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidPadding
 import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidSize
 import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidSpace
 import com.serranoie.app.puckperfect.core.ui.theme.components.util.scaledSp
@@ -83,7 +83,7 @@ fun BeanItemCard(
     Card(
         modifier =
             modifier
-                .fluidPadding(4.dp)
+                .padding(4.dp)
                 .fillMaxWidth()
                 .wrapContentHeight()
                 .clickable { onClick() },
@@ -101,8 +101,8 @@ fun BeanItemCard(
                 modifier = Modifier.matchParentSize(),
             )
             Column(
-                Modifier.fillMaxWidth().fluidPadding(start = 16.dp, top = 8.dp, end = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(CompactSpacing.small()),
+                Modifier.fillMaxWidth().padding(start = AureaSpacing.current.m, top = AureaSpacing.current.s, end = AureaSpacing.current.m),
+                verticalArrangement = Arrangement.spacedBy(AureaSpacing.current.s),
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -147,7 +147,7 @@ fun BeanItemCard(
                     origin,
                     style = MaterialTheme.typography.titleSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.fluidPadding(bottom = 8.dp),
+                    modifier = Modifier.padding(bottom = AureaSpacing.current.s),
                 )
             }
         }
@@ -158,7 +158,7 @@ fun BeanItemCard(
         TextButton(
             onClick = onToggleExtraction,
             contentPadding = PaddingValues(0.dp),
-            modifier = Modifier.fluidPadding(start = 16.dp, end = 12.dp).fluidAnimateContentSize(),
+            modifier = Modifier.padding(start = AureaSpacing.current.m, end = AureaSpacing.current.s).fluidAnimateContentSize(),
         ) {
             val rotation by animateFloatAsState(
                 targetValue = if (showExtraction) 180f else 0f,
@@ -166,7 +166,7 @@ fun BeanItemCard(
             )
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(CompactSpacing.extraSmall()),
+                horizontalArrangement = Arrangement.spacedBy(AureaSpacing.current.xs),
             ) {
                 Text(
                     "Last Extraction".uppercase(),
@@ -210,8 +210,8 @@ private fun ExtractionStatsRow(
     modifier: Modifier,
 ) {
     Column(
-        modifier = modifier.fluidPadding(top = 4.dp, bottom = 4.dp, start = 12.dp, end = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(CompactSpacing.small()),
+        modifier = modifier.padding(top = 4.dp, bottom = 4.dp, start = AureaSpacing.current.s, end = AureaSpacing.current.s),
+        verticalArrangement = Arrangement.spacedBy(AureaSpacing.current.s),
     ) {
         HorizontalDivider(
             modifier = Modifier.fillMaxWidth(),
@@ -225,7 +225,7 @@ private fun ExtractionStatsRow(
             Column(
                 modifier = Modifier.weight(1f),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(CompactSpacing.extraSmall()),
+                verticalArrangement = Arrangement.spacedBy(AureaSpacing.current.xs),
             ) {
                 Text(
                     text = "DOSE",
@@ -248,7 +248,7 @@ private fun ExtractionStatsRow(
             Column(
                 modifier = Modifier.weight(1f),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(CompactSpacing.extraSmall()),
+                verticalArrangement = Arrangement.spacedBy(AureaSpacing.current.xs),
             ) {
                 Text(
                     "YIELD",
@@ -271,7 +271,7 @@ private fun ExtractionStatsRow(
             Column(
                 modifier = Modifier.weight(1f),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(CompactSpacing.extraSmall()),
+                verticalArrangement = Arrangement.spacedBy(AureaSpacing.current.xs),
             ) {
                 Text(
                     "TIME",
@@ -302,9 +302,9 @@ private fun ExtractionStatsRow(
                 modifier = Modifier.weight(1f).fluidAnimateContentSize(),
             ) {
                 Column(
-                    Modifier.fluidPadding(vertical = 8.dp).fillMaxWidth(),
+                    Modifier.padding(vertical = AureaSpacing.current.s).fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(CompactSpacing.extraSmall()),
+                    verticalArrangement = Arrangement.spacedBy(AureaSpacing.current.xs),
                 ) {
                     Text(
                         "GRIND SETTING",
@@ -325,9 +325,9 @@ private fun ExtractionStatsRow(
                 modifier = Modifier.weight(1f).fluidAnimateContentSize(),
             ) {
                 Column(
-                    Modifier.fluidPadding(vertical = 8.dp).fillMaxWidth(),
+                    Modifier.padding(vertical = AureaSpacing.current.s).fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(CompactSpacing.extraSmall()),
+                    verticalArrangement = Arrangement.spacedBy(AureaSpacing.current.xs),
                 ) {
                     Text(
                         "RATIO",
@@ -343,11 +343,11 @@ private fun ExtractionStatsRow(
             }
         }
         Divider(
-            Modifier.fluidPadding(top = 4.dp),
+            Modifier.padding(top = 4.dp),
             color = MaterialTheme.colorScheme.outline.copy(alpha = 0.16f),
         )
         Row(
-            Modifier.fillMaxWidth().fluidPadding(top = 4.dp, bottom = 8.dp),
+            Modifier.fillMaxWidth().padding(top = 4.dp, bottom = AureaSpacing.current.s),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(

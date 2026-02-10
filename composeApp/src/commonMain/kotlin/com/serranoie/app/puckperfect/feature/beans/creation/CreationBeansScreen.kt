@@ -53,10 +53,10 @@ import com.serranoie.app.puckperfect.core.ui.theme.components.LoopingPickerColum
 import com.serranoie.app.puckperfect.core.ui.theme.components.ProcessType
 import com.serranoie.app.puckperfect.core.ui.theme.components.QuestionnaireWrapper
 import com.serranoie.app.puckperfect.core.ui.theme.components.util.FluidAnimatedVisibility
-import com.serranoie.app.puckperfect.core.ui.theme.components.util.FluidSpacing
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.AureaSpacing
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.SpacingLevel
 import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidAnimateContentSize
 import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidHeight
-import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidPadding
 import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidSize
 import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidSpace
 import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidWidth
@@ -178,9 +178,9 @@ fun CreationBeansScreen(
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
-                            .fluidPadding(horizontal = 14.dp)
+                            .padding(horizontal = AureaSpacing.current.s)
                             .fluidAnimateContentSize(),
-                        verticalArrangement = Arrangement.spacedBy(FluidSpacing.medium(), Alignment.CenterVertically),
+                        verticalArrangement = Arrangement.spacedBy(AureaSpacing.current.m, Alignment.CenterVertically),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         Box(
@@ -227,7 +227,7 @@ fun CreationBeansScreen(
                                     .copy(fontWeight = FontWeight.SemiBold),
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .fluidPadding(vertical = 4.dp)
+                                .padding(vertical = 4.dp)
                                 .fluidAnimateContentSize(),
                             shape = RoundedCornerShape(12.scaledSp()),
                             colors =
@@ -249,9 +249,9 @@ fun CreationBeansScreen(
                                 .fillMaxWidth()
                                 .fillMaxHeight()
                                 .verticalScroll(rememberScrollState())
-                                .fluidPadding(horizontal = 6.dp)
+                                .padding(horizontal = AureaSpacing.current.xs)
                                 .fluidAnimateContentSize(),
-                        verticalArrangement = Arrangement.spacedBy(FluidSpacing.small())
+                        verticalArrangement = Arrangement.spacedBy(AureaSpacing.current.s)
                     ) {
                         RoastProfile.entries.forEach { profile ->
                             RoastProfileCard(
@@ -261,7 +261,7 @@ fun CreationBeansScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .weight(1f)
-                                    .fluidPadding(vertical = 4.dp),
+                                    .padding(vertical = 4.dp),
                             )
                         }
                     }
@@ -273,13 +273,13 @@ fun CreationBeansScreen(
                             .fillMaxWidth()
                             .fluidAnimateContentSize(),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(FluidSpacing.medium())
+                        verticalArrangement = Arrangement.spacedBy(AureaSpacing.current.m)
                     ) {
                         Text(
                             "Select date of roast",
                             style = MaterialTheme.typography.titleLargeExpressive(),
                             color = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.fluidPadding(vertical = 14.dp),
+                            modifier = Modifier.padding(vertical = AureaSpacing.current.s),
                         )
                         Row(
                             Modifier.fillMaxWidth(),
@@ -330,10 +330,10 @@ fun CreationBeansScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .fillMaxHeight()
-                            .fluidPadding(12.dp)
+                            .padding(AureaSpacing.current.s)
                             .fluidAnimateContentSize(),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(FluidSpacing.medium(), Alignment.Top),
+                        verticalArrangement = Arrangement.spacedBy(AureaSpacing.current.m, Alignment.Top),
                     ) {
                         Text(
                             "Bean origins",
@@ -413,7 +413,7 @@ fun CreationBeansScreen(
                             selectedProcess = process,
                             onSelect = { process = it },
                             modifier = Modifier
-                                .fluidPadding(top = 8.dp)
+                                .padding(top = AureaSpacing.current.s)
                                 .fluidAnimateContentSize(),
                         )
                     }
@@ -529,7 +529,7 @@ fun RoastProfileCard(
         ) {
             Row(
                 Modifier
-                    .fluidPadding(horizontal = 14.dp, vertical = 10.dp)
+                    .padding(horizontal = AureaSpacing.current.s, vertical = AureaSpacing.current.s)
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(fluidSpace(12.dp)),
@@ -544,7 +544,7 @@ fun RoastProfileCard(
 
                 Column(
                     Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(FluidSpacing.extraSmall()),
+                    verticalArrangement = Arrangement.spacedBy(AureaSpacing.current.xs),
                 ) {
                     Text(
                         text = profile.displayName,

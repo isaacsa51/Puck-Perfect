@@ -32,9 +32,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.serranoie.app.puckperfect.core.ui.theme.PuckPerfectTheme
-import com.serranoie.app.puckperfect.core.ui.theme.components.util.CompactSpacing
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.AureaSpacing
 import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidHeight
-import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidPadding
 import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidSize
 import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidSpace
 import com.serranoie.app.puckperfect.core.ui.theme.components.util.scaledSp
@@ -70,9 +69,9 @@ fun BeanProcessMethodCard(
     ) {
         Column(
             modifier = Modifier
-                .fluidPadding(horizontal = 14.dp, vertical = 18.dp)
+                .padding(horizontal = AureaSpacing.current.s, vertical = AureaSpacing.current.m)
                 .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(CompactSpacing.small()),
+            verticalArrangement = Arrangement.spacedBy(AureaSpacing.current.s),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Box(

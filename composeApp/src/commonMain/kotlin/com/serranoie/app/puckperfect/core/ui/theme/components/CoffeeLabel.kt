@@ -36,10 +36,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.serranoie.app.puckperfect.core.ui.theme.PuckPerfectTheme
-import com.serranoie.app.puckperfect.core.ui.theme.components.util.CompactSpacing
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.AureaSpacing
 import com.serranoie.app.puckperfect.core.ui.theme.components.util.FluidTypography
 import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidHeight
-import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidPadding
 import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidSize
 import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidWidth
 import com.serranoie.app.puckperfect.core.ui.theme.components.util.scaledSp
@@ -119,15 +118,15 @@ fun CoffeeLabel(
             Column(modifier = Modifier.fillMaxWidth()) {
                 // Header section with brand and logo
                 Box(
-                    modifier = Modifier
+                    modifier =                     Modifier
                         .fillMaxWidth()
                         .background(headerBg)
                         .border(1.dp, outlineColor, RoundedCornerShape(borderRadius))
-                        .fluidPadding(vertical = 20.dp)
+                        .padding(vertical = AureaSpacing.current.m)
                 ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(CompactSpacing.medium()),
+                        verticalArrangement = Arrangement.spacedBy(AureaSpacing.current.m),
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         // Coffee icon in circle
@@ -160,7 +159,7 @@ fun CoffeeLabel(
                         .fillMaxWidth()
                         .fluidHeight(44.dp)
                         .border(1.dp, outlineColor)
-                        .fluidPadding(vertical = 8.dp),
+                        .padding(vertical = AureaSpacing.current.s),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
@@ -226,7 +225,7 @@ fun CoffeeLabel(
                     Column(
                         modifier = Modifier
                             .weight(1f)
-                            .fluidPadding(8.dp),
+                            .padding(AureaSpacing.current.s),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
@@ -240,7 +239,7 @@ fun CoffeeLabel(
                                 Spacer(modifier = Modifier.fluidHeight(6.dp))
                                 DottedDivider(
                                     modifier = Modifier
-                                        .fluidPadding(horizontal = 0.dp)
+                                        .padding(horizontal = 0.dp)
                                         .fluidHeight(5.dp)
                                 )
                                 Spacer(modifier = Modifier.fluidHeight(6.dp))
@@ -272,8 +271,8 @@ private fun LabelInfoColumn(
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier.fluidPadding(8.dp),
-        verticalArrangement = Arrangement.spacedBy(CompactSpacing.extraSmall())
+        modifier = modifier.padding(AureaSpacing.current.s),
+        verticalArrangement = Arrangement.spacedBy(AureaSpacing.current.xs)
     ) {
         Text(
             text = label,

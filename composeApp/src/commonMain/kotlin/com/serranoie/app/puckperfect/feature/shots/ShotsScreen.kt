@@ -1,42 +1,44 @@
 package com.serranoie.app.puckperfect.feature.shots
 
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.FabPosition
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.serranoie.app.puckperfect.core.ui.theme.PuckPerfectTheme
 import com.serranoie.app.puckperfect.core.ui.theme.components.ShotFlavor
 import com.serranoie.app.puckperfect.core.ui.theme.components.ShotItem
-import com.serranoie.app.puckperfect.core.ui.theme.components.util.CompactSpacing
 import com.serranoie.app.puckperfect.core.ui.theme.components.util.FluidAnimatedVisibility
 import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidAnimateContentSize
 import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidSize
 import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidSpace
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import kotlin.math.abs
+import kotlin.math.roundToInt
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ShotsScreen() {
+fun ShotsScreen(
+    onSwipeToExtraction: (grams: Float, timeSeconds: Int) -> Unit = { _, _ -> },
+) {
     // Mock data
     data class Shot(
         val id: Int,
@@ -74,33 +76,14 @@ fun ShotsScreen() {
         )
     }
     val listState = rememberLazyListState()
-    val expandedFab by remember { derivedStateOf { listState.firstVisibleItemIndex == 0 } }
-    val scope = rememberCoroutineScope()
+    val density = LocalDensity.current
+    val swipeThresholdPx = with(density) { 96.dp.toPx() }
+    val maxSwipePx = with(density) { 160.dp.toPx() }
 
-    Scaffold(
-        floatingActionButton = {
-            ExtendedFloatingActionButton(
-                onClick = { /* Add shot action */ },
-                expanded = expandedFab,
-                icon = {
-                    Icon(
-                        Icons.Filled.Add,
-                        contentDescription = "Add Shot",
-                        modifier = Modifier.fluidSize(16.dp),
-                    )
-                },
-                text = { Text(text = "New Espresso") },
-                modifier = Modifier.fluidAnimateContentSize(),
-            )
-        },
-        floatingActionButtonPosition = FabPosition.End,
-    ) { padding ->
+    Scaffold { padding ->
         LazyColumn(
             state = listState,
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(bottom = padding.calculateBottomPadding()),
+            modifier = Modifier.fillMaxSize().padding(bottom = padding.calculateBottomPadding()),
             contentPadding = PaddingValues(top = 0.dp),
         ) {
             items(shots, key = { it.id }) { shot ->
@@ -120,7 +103,35 @@ fun ShotsScreen() {
                 FluidAnimatedVisibility(
                     visible = true,
                 ) {
+                    val grams = shot.weight.toFloatOrNull() ?: 18f
+                    val timeSeconds = shot.time.filter { it.isDigit() }.toIntOrNull() ?: 30
+                    val offsetX = remember(shot.id) { Animatable(0f) }
+
                     ShotItem(
+                        modifier =
+                            Modifier
+                                .offset { IntOffset(offsetX.value.roundToInt(), 0) }
+                                .pointerInput(shot.id) {
+                                    kotlinx.coroutines.coroutineScope {
+                                        detectHorizontalDragGestures(
+                                            onHorizontalDrag = { change, dragAmount ->
+                                                change.consume()
+                                                val next = (offsetX.value + dragAmount).coerceIn(-maxSwipePx, maxSwipePx)
+                                                launch { offsetX.snapTo(next) }
+                                            },
+                                            onDragEnd = {
+                                                val shouldNavigate = abs(offsetX.value) >= swipeThresholdPx
+                                                if (shouldNavigate) {
+                                                    onSwipeToExtraction(grams, timeSeconds)
+                                                }
+                                                launch { offsetX.animateTo(0f, animationSpec = tween(durationMillis = 220)) }
+                                            },
+                                            onDragCancel = {
+                                                launch { offsetX.animateTo(0f, animationSpec = tween(durationMillis = 220)) }
+                                            },
+                                        )
+                                    }
+                                },
                         beanName = shot.bean,
                         dateTime = "Today",
                         grinder = "Grinder", // You can split this further if you have a grinder model name

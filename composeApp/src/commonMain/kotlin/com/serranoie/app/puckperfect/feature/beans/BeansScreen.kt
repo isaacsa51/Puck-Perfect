@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -19,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.serranoie.app.puckperfect.core.ui.theme.PuckPerfectTheme
 import com.serranoie.app.puckperfect.core.ui.theme.components.BeanItemCard
-import com.serranoie.app.puckperfect.core.ui.theme.components.FloatingToolBar
 import com.serranoie.app.puckperfect.core.ui.theme.components.LastExtractionSection
 import com.serranoie.app.puckperfect.core.ui.theme.components.util.FluidAnimatedVisibility
 import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidAnimateContentSize
@@ -319,20 +317,6 @@ fun BeansScreen(
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        floatingActionButton = {
-            FloatingToolBar(
-                onReset = { onAddBean() },
-                onDismiss = { /* Dismiss action */ },
-                onClick = {
-                    selectedId?.let { beanId ->
-                        onNavigateToExtraction(beanId)
-                    }
-                },
-                enabled = selectedId != null,
-            )
-        },
-        bottomBar = {},
-        floatingActionButtonPosition = FabPosition.Center,
     ) { padding ->
         LazyColumn(
             modifier = Modifier.fillMaxSize().padding(bottom = padding.calculateBottomPadding()),

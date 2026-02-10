@@ -38,7 +38,6 @@ import androidx.compose.ui.unit.sp
 import com.serranoie.app.puckperfect.core.ui.theme.PuckPerfectTheme
 import com.serranoie.app.puckperfect.core.ui.theme.components.util.FluidTypography
 import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidHeight
-import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidPadding
 import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidScale
 import com.serranoie.app.puckperfect.core.ui.theme.displayMediumCondensed
 import com.serranoie.app.puckperfect.core.ui.theme.displayMediumExpressive

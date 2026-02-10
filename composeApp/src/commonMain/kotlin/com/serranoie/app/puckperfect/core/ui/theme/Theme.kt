@@ -8,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import com.serranoie.app.puckperfect.core.ui.theme.components.util.AureaScaleProvider
 
 private val lightColorScheme = lightColorScheme(
     primary = PrimaryLight,
@@ -114,6 +115,7 @@ private val darkColorScheme = darkColorScheme(
 @Composable
 fun PuckPerfectTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
+    useAureaPadding: Boolean = false,
     content: @Composable() () -> Unit,
 ) {
     val colorScheme = when {
@@ -123,7 +125,10 @@ fun PuckPerfectTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        content = content,
         typography = AppTypography()
-    )
+    ) {
+        AureaScaleProvider(useAureaPadding = useAureaPadding) {
+            content()
+        }
+    }
 }

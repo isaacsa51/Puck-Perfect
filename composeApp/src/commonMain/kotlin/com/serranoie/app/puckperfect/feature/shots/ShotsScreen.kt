@@ -3,8 +3,10 @@ package com.serranoie.app.puckperfect.feature.shots
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,12 +15,14 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -26,9 +30,6 @@ import com.serranoie.app.puckperfect.core.ui.theme.PuckPerfectTheme
 import com.serranoie.app.puckperfect.core.ui.theme.components.ShotFlavor
 import com.serranoie.app.puckperfect.core.ui.theme.components.ShotItem
 import com.serranoie.app.puckperfect.core.ui.theme.components.util.FluidAnimatedVisibility
-import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidAnimateContentSize
-import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidSize
-import com.serranoie.app.puckperfect.core.ui.theme.components.util.fluidSpace
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import kotlin.math.abs
 import kotlin.math.roundToInt
@@ -79,6 +80,7 @@ fun ShotsScreen(
     val density = LocalDensity.current
     val swipeThresholdPx = with(density) { 96.dp.toPx() }
     val maxSwipePx = with(density) { 160.dp.toPx() }
+    var expandedBadShotId by remember { mutableIntStateOf(-1) }
 
     Scaffold { padding ->
         LazyColumn(
@@ -103,44 +105,60 @@ fun ShotsScreen(
                 FluidAnimatedVisibility(
                     visible = true,
                 ) {
-                    val grams = shot.weight.toFloatOrNull() ?: 18f
-                    val timeSeconds = shot.time.filter { it.isDigit() }.toIntOrNull() ?: 30
                     val offsetX = remember(shot.id) { Animatable(0f) }
-
-                    ShotItem(
-                        modifier =
-                            Modifier
-                                .offset { IntOffset(offsetX.value.roundToInt(), 0) }
-                                .pointerInput(shot.id) {
-                                    kotlinx.coroutines.coroutineScope {
-                                        detectHorizontalDragGestures(
-                                            onHorizontalDrag = { change, dragAmount ->
-                                                change.consume()
-                                                val next = (offsetX.value + dragAmount).coerceIn(-maxSwipePx, maxSwipePx)
-                                                launch { offsetX.snapTo(next) }
-                                            },
-                                            onDragEnd = {
-                                                val shouldNavigate = abs(offsetX.value) >= swipeThresholdPx
-                                                if (shouldNavigate) {
-                                                    onSwipeToExtraction(grams, timeSeconds)
-                                                }
-                                                launch { offsetX.animateTo(0f, animationSpec = tween(durationMillis = 220)) }
-                                            },
-                                            onDragCancel = {
-                                                launch { offsetX.animateTo(0f, animationSpec = tween(durationMillis = 220)) }
-                                            },
-                                        )
-                                    }
-                                },
-                        beanName = shot.bean,
-                        dateTime = "Today",
-                        grinder = "Grinder", // You can split this further if you have a grinder model name
-                        grinderSetting = settingVal,
-                        yield = shot.weight,
-                        time = shot.time.trimEnd('s', 'S'),
-                        flavor = flavorEnum,
-                        underExtracted = flavorEnum != ShotFlavor.SWEET,
-                    )
+                    val timeSeconds = shot.time.filter { it.isDigit() }.toIntOrNull() ?: 30
+                    val grams = shot.weight.toFloatOrNull() ?: 18f
+                    val isBadShot = flavorEnum != ShotFlavor.SWEET
+                    Box(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        ShotItem(
+                                modifier =
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .offset { IntOffset(offsetX.value.roundToInt(), 0) }
+                                        .pointerInput(shot.id) {
+                                            kotlinx.coroutines.coroutineScope {
+                                                detectHorizontalDragGestures(
+                                                    onHorizontalDrag = { change, dragAmount ->
+                                                        change.consume()
+                                                        val next = (offsetX.value + dragAmount).coerceIn(-maxSwipePx, maxSwipePx)
+                                                        launch { offsetX.snapTo(next) }
+                                                    },
+                                                    onDragEnd = {
+                                                        val shouldNavigate = abs(offsetX.value) >= swipeThresholdPx
+                                                        if (shouldNavigate) {
+                                                            onSwipeToExtraction(grams, timeSeconds)
+                                                        }
+                                                        launch { offsetX.animateTo(0f, animationSpec = tween(220)) }
+                                                    },
+                                                    onDragCancel = {
+                                                        launch { offsetX.animateTo(0f, animationSpec = tween(durationMillis = 220)) }
+                                                    },
+                                                )
+                                            }
+                                        },
+                                beanName = shot.bean,
+                                dateTime = "Today",
+                                grinder = "Grinder",
+                                grinderSetting = settingVal,
+                                grams = shot.weight,
+                                time = shot.time.trimEnd('s', 'S'),
+                                flavor = flavorEnum,
+                                underExtracted = isBadShot,
+                                isFavorite = false,
+                                badShotExpanded = isBadShot && expandedBadShotId == shot.id,
+                                onBadShotToggle =
+                                    if (isBadShot) {
+                                        {
+                                            expandedBadShotId = if (expandedBadShotId == shot.id) -1 else shot.id
+                                        }
+                                    } else {
+                                        null
+                                    },
+                        )
+                    }
                 }
             }
         }

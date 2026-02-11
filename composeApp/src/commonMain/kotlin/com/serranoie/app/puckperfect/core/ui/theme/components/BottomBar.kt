@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.unit.dp
 import com.serranoie.app.puckperfect.core.ui.theme.PuckPerfectTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -39,7 +40,9 @@ fun BottomBar(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .navigationBarsPadding(),
+            // Important: apply insets BEFORE background so the background fills the inset area too.
+            .navigationBarsPadding()
+            .background(MaterialTheme.colorScheme.surface),
         contentAlignment = Alignment.BottomCenter
     ) {
 		Row(
@@ -47,7 +50,6 @@ fun BottomBar(
 				Modifier
 					.fillMaxWidth()
 					.clip(RoundedCornerShape(12.dp))
-					.background(MaterialTheme.colorScheme.surface)
 					.padding(vertical = 15.dp, horizontal = 15.dp),
 			horizontalArrangement = Arrangement.SpaceBetween,
 			verticalAlignment = Alignment.CenterVertically,
@@ -102,13 +104,15 @@ fun BottomBar(
 				.align(Alignment.TopCenter)
 				.offset(y = (-32).dp)
 				.background(MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(8.dp))
-				.size(64.dp),
+				.size(64.dp)
+				.rotate(45f),
 		) {
 			Icon(
 				imageVector = Icons.Filled.Add,
 				contentDescription = "add",
 				tint = MaterialTheme.colorScheme.onPrimary,
-				modifier = Modifier.size(36.dp)
+				// Keep icon upright while the button is rotated
+				modifier = Modifier.size(36.dp).rotate(-45f),
 			)
 		}
 	}

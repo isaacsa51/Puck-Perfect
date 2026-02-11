@@ -1,6 +1,14 @@
 package com.serranoie.app.puckperfect.core.ui.theme.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -12,6 +20,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -22,8 +32,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -50,14 +62,18 @@ fun ShotItem(
     dateTime: String,
     grinder: String,
     grinderSetting: String,
-    yield: String,
+    grams: String,
     time: String,
     flavor: ShotFlavor,
     underExtracted: Boolean = false,
+    isFavorite: Boolean = false,
+    badShotExpanded: Boolean = false,
+    onBadShotToggle: (() -> Unit)? = null,
 ) {
     val surface = MaterialTheme.colorScheme.surfaceContainerHigh
     val error = MaterialTheme.colorScheme.error
     val isWarning = (flavor == ShotFlavor.BITTER || flavor == ShotFlavor.ACID)
+    val isBadShot = underExtracted && isWarning
     val flavorLabel =
         when (flavor) {
             ShotFlavor.SWEET -> "SWEET"
@@ -79,7 +95,14 @@ fun ShotItem(
         modifier =
             modifier
                 .fillMaxWidth()
-                .padding(4.dp),
+                .padding(4.dp)
+                .then(
+                    if (isBadShot && onBadShotToggle != null) {
+                        Modifier.clickable { onBadShotToggle() }
+                    } else {
+                        Modifier
+                    },
+                ),
         shape = RoundedCornerShape(10.dp),
         border = if (isWarning) BorderStroke(1.25.dp, error) else null,
         colors = CardDefaults.cardColors(containerColor = surface),
@@ -130,6 +153,14 @@ fun ShotItem(
                     }
                 }
                 Spacer(Modifier.weight(1f))
+                if (isFavorite) {
+                    Icon(
+                        imageVector = Icons.Rounded.Star,
+                        contentDescription = "God shot",
+                        tint = Color(0xFFFFD54F),
+                        modifier = Modifier.fluidSize(16.dp),
+                    )
+                }
                 Text(
                     dateTime,
                     style = MaterialTheme.typography.labelMediumCondensed(),
@@ -148,9 +179,14 @@ fun ShotItem(
             )
 
             FluidAnimatedVisibility(
-                visible = underExtracted && isWarning,
+                visible = isBadShot,
                 modifier = Modifier.fluidAnimateContentSize(),
             ) {
+                val chevronRotation by animateFloatAsState(
+                    targetValue = if (badShotExpanded) 180f else 0f,
+                    animationSpec = tween(220),
+                    label = "BadShotChevronRotation",
+                )
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(AureaSpacing.current.xs),
@@ -167,36 +203,90 @@ fun ShotItem(
                         fontWeight = FontWeight.SemiBold,
                         style = MaterialTheme.typography.labelSmallCondensed(),
                     )
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowDown,
+                        contentDescription = if (badShotExpanded) "Collapse" else "Expand",
+                        tint = error,
+                        modifier = Modifier.fluidSize(16.dp).rotate(chevronRotation),
+                    )
                 }
             }
 
-            HorizontalDivider(Modifier.padding(vertical = 4.dp))
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .height(IntrinsicSize.Min),
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                ShotStatColumn(
-                    label = grinder,
-                    value = grinderSetting,
-                    unit = "",
-                    modifier = Modifier.weight(1f),
-                )
-                VerticalDivider()
-                ShotStatColumn(
-                    label = "YIELD",
-                    value = yield,
-                    unit = "g",
-                    modifier = Modifier.weight(1f),
-                )
-                VerticalDivider()
-                ShotStatColumn(
-                    label = "TIME",
-                    value = time,
-                    unit = "s",
-                    modifier = Modifier.weight(1f),
-                )
+            // BeansScreen-like behavior for "bad" shots:
+            // - hide stats by default
+            // - reveal stats on tap (chevron toggles)
+            if (!isBadShot) {
+                HorizontalDivider(Modifier.padding(vertical = 4.dp))
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .height(IntrinsicSize.Min),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    ShotStatColumn(
+                        label = grinder,
+                        value = grinderSetting,
+                        unit = "",
+                        modifier = Modifier.weight(1f),
+                    )
+                    VerticalDivider()
+                    ShotStatColumn(
+                        label = "DOSE",
+                        value = grams,
+                        unit = "g",
+                        modifier = Modifier.weight(1f),
+                    )
+                    VerticalDivider()
+                    ShotStatColumn(
+                        label = "TIME",
+                        value = time,
+                        unit = "s",
+                        modifier = Modifier.weight(1f),
+                    )
+                }
+            } else {
+                AnimatedVisibility(
+                    visible = badShotExpanded,
+                    enter = fadeIn(animationSpec = tween(170)) + expandVertically(animationSpec = tween(220)),
+                    exit = fadeOut(animationSpec = tween(120)) + shrinkVertically(animationSpec = tween(170)),
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(AureaSpacing.current.xs),
+                    ) {
+                        HorizontalDivider(
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                            color = MaterialTheme.colorScheme.outline.copy(alpha = 0.16f),
+                        )
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .height(IntrinsicSize.Min),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                        ) {
+                            ShotStatColumn(
+                                label = grinder,
+                                value = grinderSetting,
+                                unit = "",
+                                modifier = Modifier.weight(1f),
+                            )
+                            VerticalDivider()
+                            ShotStatColumn(
+                                label = "DOSE",
+                                value = grams,
+                                unit = "g",
+                                modifier = Modifier.weight(1f),
+                            )
+                            VerticalDivider()
+                            ShotStatColumn(
+                                label = "TIME",
+                                value = time,
+                                unit = "s",
+                                modifier = Modifier.weight(1f),
+                            )
+                        }
+                    }
+                }
             }
         }
     }
@@ -250,10 +340,12 @@ private fun ShotPreview() {
                 dateTime = "Today",
                 grinder = "Mazzer Mini",
                 grinderSetting = "18",
-                yield = "30",
+                grams = "18.0",
                 time = "25",
                 flavor = ShotFlavor.BITTER,
                 underExtracted = true,
+                badShotExpanded = true,
+                onBadShotToggle = {},
             )
 
             ShotItem(
@@ -262,10 +354,11 @@ private fun ShotPreview() {
                 dateTime = "15 December",
                 grinder = "Mazzer Mini",
                 grinderSetting = "18",
-                yield = "30",
+                grams = "18.0",
                 time = "25",
                 flavor = ShotFlavor.SWEET,
                 underExtracted = false,
+                isFavorite = true,
             )
         }
     }

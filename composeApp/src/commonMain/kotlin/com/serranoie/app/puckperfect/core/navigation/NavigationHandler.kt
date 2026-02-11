@@ -132,7 +132,7 @@ fun NavigationHost() {
                             }
                             PPNavScreen.SHOTS -> {
                                 ShotsScreen(
-                                    onSwipeToExtraction = { grams, timeSeconds ->
+                                    onSwipeToExtraction = { grams: Float, timeSeconds: Int ->
                                         navigateToExtraction(
                                             ExtractionPrefill(
                                                 grams = grams,
@@ -173,7 +173,6 @@ fun NavigationHost() {
                 onFabClick = { fabMenuOpen = !fabMenuOpen },
                 modifier = androidx.compose.ui.Modifier
                     .align(androidx.compose.ui.Alignment.BottomCenter)
-                    .padding(bottom = 18.dp)
             )
         }
         // Overlay menu always

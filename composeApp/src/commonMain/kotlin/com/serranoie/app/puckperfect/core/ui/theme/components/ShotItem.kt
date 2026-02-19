@@ -21,7 +21,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material.icons.rounded.Warning
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -66,7 +65,47 @@ fun ShotItem(
     time: String,
     flavor: ShotFlavor,
     underExtracted: Boolean = false,
-    isFavorite: Boolean = false,
+    badShotExpanded: Boolean = false,
+    onBadShotToggle: (() -> Unit)? = null,
+    startActionsConfig: StartActionsConfig? = null,
+    endActionsConfig: EndActionsConfig? = null,
+    onTried: () -> Unit = {},
+    showTutorial: Boolean = false,
+    threshold: Float = 0.4f,
+) {
+    SwipeActions(
+        modifier = modifier,
+        startActionsConfig = startActionsConfig,
+        endActionsConfig = endActionsConfig,
+        onTried = onTried,
+        showTutorial = showTutorial,
+        threshold = threshold,
+    ) {
+        ShotItemContent(
+            beanName = beanName,
+            dateTime = dateTime,
+            grinder = grinder,
+            grinderSetting = grinderSetting,
+            grams = grams,
+            time = time,
+            flavor = flavor,
+            underExtracted = underExtracted,
+            badShotExpanded = badShotExpanded,
+            onBadShotToggle = onBadShotToggle,
+        )
+    }
+}
+
+@Composable
+private fun ShotItemContent(
+    beanName: String,
+    dateTime: String,
+    grinder: String,
+    grinderSetting: String,
+    grams: String,
+    time: String,
+    flavor: ShotFlavor,
+    underExtracted: Boolean = false,
     badShotExpanded: Boolean = false,
     onBadShotToggle: (() -> Unit)? = null,
 ) {
@@ -93,7 +132,7 @@ fun ShotItem(
 
     Card(
         modifier =
-            modifier
+            Modifier
                 .fillMaxWidth()
                 .padding(4.dp)
                 .then(
@@ -153,14 +192,6 @@ fun ShotItem(
                     }
                 }
                 Spacer(Modifier.weight(1f))
-                if (isFavorite) {
-                    Icon(
-                        imageVector = Icons.Rounded.Star,
-                        contentDescription = "God shot",
-                        tint = Color(0xFFFFD54F),
-                        modifier = Modifier.fluidSize(16.dp),
-                    )
-                }
                 Text(
                     dateTime,
                     style = MaterialTheme.typography.labelMediumCondensed(),
@@ -358,7 +389,6 @@ private fun ShotPreview() {
                 time = "25",
                 flavor = ShotFlavor.SWEET,
                 underExtracted = false,
-                isFavorite = true,
             )
         }
     }
